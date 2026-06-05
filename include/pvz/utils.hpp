@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-inline std::string FindAssetDir() {
+inline std::string FindAssetDir()
+{
   const std::filesystem::path cwd = std::filesystem::current_path();
   std::vector<std::filesystem::path> candidates = {
       cwd / "assets",
@@ -20,9 +21,11 @@ inline std::string FindAssetDir() {
   candidates.push_back(std::filesystem::path(PVZ_SOURCE_DIR) / "assets");
 #endif
 
-  for (const auto& candidate : candidates) {
+  for (const auto &candidate : candidates)
+  {
     std::error_code existsError;
-    if (!std::filesystem::exists(candidate / "background.png", existsError)) {
+    if (!std::filesystem::exists(candidate / "background.png", existsError))
+    {
       continue;
     }
 
@@ -38,7 +41,8 @@ inline std::string FindAssetDir() {
 static const std::string ASSET_DIR = FindAssetDir();
 
 // Returns a random integer within [min, max] (inclusive).
-inline int randInt(int min, int max) {
+inline int randInt(int min, int max)
+{
   if (max < min)
     std::swap(max, min);
   static std::random_device rd;
@@ -47,9 +51,15 @@ inline int randInt(int min, int max) {
   return distro(generator);
 }
 
-enum class LevelStatus { ONGOING, WINNING, LOSING };
+enum class LevelStatus
+{
+  ONGOING,
+  WINNING,
+  LOSING
+};
 
-enum class KeyCode {
+enum class KeyCode
+{
   NONE,
   ENTER, // Enter
   QUIT   // Esc
@@ -86,7 +96,8 @@ const int SUN_COUNTER_X = 58;
 const int SUN_COUNTER_Y = WINDOW_HEIGHT - 82;
 const int SUN_VALUE = 25;
 
-enum class ImageID {
+enum class ImageID
+{
   NONE = 0,
   BACKGROUND,
   SUN,
@@ -132,11 +143,20 @@ enum class ImageID {
   ZOMBIE_CARD_BUNGEE
 };
 
-enum class AnimID { NO_ANIMATION = 0, IDLE, WALK, EAT, RUN, JUMP };
+enum class AnimID
+{
+  NO_ANIMATION = 0,
+  IDLE,
+  WALK,
+  EAT,
+  RUN,
+  JUMP
+};
 
 const int MAX_LAYERS = 7;
 
-enum class LayerID {
+enum class LayerID
+{
   SUN = 0,
   ZOMBIES,
   PROJECTILES,

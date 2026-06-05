@@ -6,16 +6,17 @@
 
 #include "pvz/utils.hpp"
 
-class ObjectBase {
+class ObjectBase
+{
 public:
   ObjectBase(ImageID imageID, int x, int y, LayerID layer, int width, int height, AnimID animID);
-  ObjectBase(const ObjectBase& other) = delete;
-  ObjectBase(ObjectBase&& other) = delete;
-  ObjectBase& operator=(const ObjectBase& other) = delete;
-  ObjectBase& operator=(ObjectBase&& other) = delete;
+  ObjectBase(const ObjectBase &other) = delete;
+  ObjectBase(ObjectBase &&other) = delete;
+  ObjectBase &operator=(const ObjectBase &other) = delete;
+  ObjectBase &operator=(ObjectBase &&other) = delete;
   virtual ~ObjectBase();
 
-  virtual bool operator==(const ObjectBase& other);
+  virtual bool operator==(const ObjectBase &other);
 
   virtual void Update() = 0;
   virtual void OnClick() = 0;
@@ -26,7 +27,7 @@ public:
   int GetHeight() const;
 
   void MoveTo(int x, int y);
-  
+
   AnimID GetCurrentAnimation() const;
   void ChangeImage(ImageID imageID);
   void PlayAnimation(AnimID animID);
@@ -44,19 +45,26 @@ private:
   std::size_t m_currentFrame;
 
 private:
-  template<typename Func>
-  static void DisplayAllObjects(Func displayAndAnimateFunc) {
-    for (int layer = MAX_LAYERS - 1; layer >= 0; layer--) {
-      for (auto& obj : GetObjects(static_cast<LayerID>(layer))) {
+  template <typename Func>
+  static void DisplayAllObjects(Func displayAndAnimateFunc)
+  {
+    for (int layer = MAX_LAYERS - 1; layer >= 0; layer--)
+    {
+      for (auto &obj : GetObjects(static_cast<LayerID>(layer)))
+      {
         obj->m_currentFrame = displayAndAnimateFunc(obj->m_imageID, obj->m_animID, obj->m_x, obj->m_y, obj->m_currentFrame);
       }
     }
   }
 
-  static void ClickAt(int x, int y) {
-    for (int layer = 0; layer < MAX_LAYERS; layer++) {
-      for (auto& obj : GetObjects(static_cast<LayerID>(layer))) {
-        if (std::abs(x - obj->m_x) <= obj->m_width / 2 && std::abs(y - obj->m_y) <= obj->m_height / 2) {
+  static void ClickAt(int x, int y)
+  {
+    for (int layer = 0; layer < MAX_LAYERS; layer++)
+    {
+      for (auto &obj : GetObjects(static_cast<LayerID>(layer)))
+      {
+        if (std::abs(x - obj->m_x) <= obj->m_width / 2 && std::abs(y - obj->m_y) <= obj->m_height / 2)
+        {
           obj->OnClick();
           return;
         }
@@ -64,9 +72,7 @@ private:
     }
   }
 
-  static std::set<ObjectBase*>& GetObjects(LayerID layer);
-
+  static std::set<ObjectBase *> &GetObjects(LayerID layer);
 };
-
 
 #endif // !OBJECTBASE_H__

@@ -6,11 +6,10 @@
 // Declares the class name GameWorld so that its pointers can be used.
 class GameWorld;
 
-class GameObject : public ObjectBase {
+class GameObject : public ObjectBase
+{
 public:
-
 private:
-
 };
 
 #endif // !GAMEOBJECT_HPP__

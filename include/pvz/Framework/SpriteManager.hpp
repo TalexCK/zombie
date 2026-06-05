@@ -13,7 +13,8 @@
 
 #include "pvz/utils.hpp"
 
-struct SpriteInfo {
+struct SpriteInfo
+{
 public:
   SpriteInfo(std::string filename_, int totalWidth_, int totalHeight_,
              int spriteWidth_, int spriteHeight_, int cols_ = 1,
@@ -34,13 +35,15 @@ public:
 
 using SpriteInfoID = int;
 
-class SpriteManager {
+class SpriteManager
+{
 public:
   // Meyers' singleton pattern
   virtual ~SpriteManager() {}
   SpriteManager(const SpriteManager &other) = delete;
   SpriteManager &operator=(const SpriteManager &other) = delete;
-  static SpriteManager &Instance() {
+  static SpriteManager &Instance()
+  {
     static SpriteManager instance;
     return instance;
   }
@@ -54,7 +57,8 @@ private:
 
   bool LoadSprites();
 
-  constexpr static SpriteInfoID EncodeAnim(ImageID imgID, AnimID animID) {
+  constexpr static SpriteInfoID EncodeAnim(ImageID imgID, AnimID animID)
+  {
     return static_cast<int>(imgID) * 1000 + static_cast<int>(animID);
   }
 

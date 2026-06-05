@@ -11,7 +11,8 @@
 #include "pvz/Framework/TextBase.hpp"
 #include "pvz/utils.hpp"
 
-class GameWorld : public WorldBase {
+class GameWorld : public WorldBase
+{
 public:
   // Consider:
   // Use shared_from_this() instead of "this" to create a pointer to oneself?
@@ -26,7 +27,6 @@ public:
   void CleanUp() override;
 
 private:
-
 };
 
 #endif // !GAMEWORLD_HPP__
