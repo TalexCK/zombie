@@ -39,3 +39,5 @@ void ProgressBar::Update()
   ProgressBar::ChangeImage(GetProgressBarImageForStage(m_stage * 8 / TOTAL_ROUNDS));
 }
 void ProgressBar::OnClick() {}
+
+void ProgressBar::setStage(int stage) { m_stage = stage; }

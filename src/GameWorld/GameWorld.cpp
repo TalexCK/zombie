@@ -1,6 +1,7 @@
 #include "pvz/GameWorld/GameWorld.hpp"
 #include "pvz/Objects/Background.hpp"
 #include "pvz/Objects/ProgressBar.hpp"
+#include "pvz/Objects/Brain.hpp"
 
 void GameWorld::Init()
 {
@@ -32,4 +33,44 @@ LevelStatus GameWorld::Update()
 void GameWorld::CleanUp()
 {
   // YOUR CODE HERE
+}
+
+int GameWorld::getSunCount() const { return m_sunCount; }
+void GameWorld::addSun(int count)
+{
+  m_sunCount += count;
+}
+bool GameWorld::consumeSun(int count)
+{
+  if (m_sunCount < count)
+    return false;
+  m_sunCount -= count;
+  return true;
+}
+
+bool GameWorld::decreaseBrains()
+{
+  m_brains--;
+  if (m_brains <= 0)
+    return true;
+  return false;
+}
+
+bool GameWorld::updateStage()
+{
+  m_stage++;
+  if (m_stage > TOTAL_ROUNDS)
+    return false;
+  return true;
+}
+
+void GameWorld::initBrains()
+{
+  m_brains = 5;
+  for (int i = 0; i < m_brains; i++)
+  {
+    std::shared_ptr<Brain> brain = std::make_shared<Brain>();
+    brain->setID(i);
+    m_objects.push_back(brain);
+  }
 }

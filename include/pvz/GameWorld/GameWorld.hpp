@@ -28,39 +28,15 @@ public:
 
   void CleanUp() override;
 
-  int getSunCount() const { return m_sunCount; }
-  void addSun(int count)
-  {
-    m_sunCount += count;
-  }
-  bool consumeSun(int count)
-  {
-    if (m_sunCount < count)
-      return false;
-    m_sunCount -= count;
-    return true;
-  }
+  int getSunCount() const;
+  void addSun(int count);
+  bool consumeSun(int count);
 
-  bool decreaseBrains()
-  {
-    m_brains--;
-    if (m_brains <= 0)
-      return true;
-    return false;
-  }
+  bool decreaseBrains();
 
-  bool updateStage()
-  {
-    m_stage++;
-    if (m_stage > TOTAL_ROUNDS)
-      return false;
-    return true;
-  }
+  bool updateStage();
 
-  void initBrains()
-  {
-    m_brains = 5;
-  }
+  void initBrains();
 
 private:
   std::list<std::shared_ptr<GameObject>> m_objects;
