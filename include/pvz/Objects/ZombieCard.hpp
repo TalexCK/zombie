@@ -6,11 +6,11 @@
 
 enum class ZombieType
 {
-  REGULAR = 0,
-  BUCKET = 3,
-  BUNGEE = 4,
-  CONEHEAD = 1,
-  POLE = 2,
+  REGULAR,
+  BUCKET,
+  BUNGEE,
+  CONEHEAD,
+  POLE,
 };
 
 class ZombieCard : public GameObject

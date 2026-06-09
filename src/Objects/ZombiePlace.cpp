@@ -11,5 +11,7 @@ void ZombiePlace::OnClick() {}
 
 void ZombiePlace::setPosition(int row, int col)
 {
+  m_row = row;
+  m_col = col;
   MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH, FIRST_ROW_CENTER + row * LAWN_GRID_HEIGHT);
 }

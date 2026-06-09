@@ -91,10 +91,10 @@ void GameWorld::initBrains()
 
 void GameWorld::initZombieCards()
 {
-  for (int i = 0; i < 5; i++)
+  for (ZombieType type : {ZombieType::REGULAR, ZombieType::CONEHEAD, ZombieType::POLE, ZombieType::BUCKET, ZombieType::BUNGEE})
   {
     std::shared_ptr<ZombieCard> zombieCard = std::make_shared<ZombieCard>();
-    zombieCard->setType(static_cast<ZombieType>(i));
+    zombieCard->setType(type);
     m_objects.push_back(zombieCard);
   }
 }
