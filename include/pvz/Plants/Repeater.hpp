@@ -1,0 +1,22 @@
+#ifndef REPEATER_HPP
+#define REPEATER_HPP
+
+#include "pvz/GameObject/GameObject.hpp"
+#include "pvz/utils.hpp"
+
+class Repeater : public GameObject
+{
+public:
+  Repeater();
+
+  void Update() override;
+  void OnClick() override;
+
+  void setPosition(int row, int col);
+
+private:
+  int m_row = 0;
+  int m_col = 0;
+};
+
+#endif // !REPEATER_HPP

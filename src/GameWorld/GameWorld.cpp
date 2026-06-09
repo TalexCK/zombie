@@ -5,6 +5,10 @@
 #include "pvz/Objects/RedLine.hpp"
 #include "pvz/Objects/ZombieCard.hpp"
 #include "pvz/Objects/ZombiePlace.hpp"
+#include "pvz/Plants/SunFlower.hpp"
+#include "pvz/Plants/PeaShooter.hpp"
+#include "pvz/Plants/Repeater.hpp"
+#include "pvz/Plants/WallNut.hpp"
 
 void GameWorld::Init()
 {
@@ -34,6 +38,7 @@ void GameWorld::Init()
   m_redLine->updateColLeft(m_deploymentStartCol);
 
   updateStage();
+  generatePlant(m_deploymentStartCol - 1);
 }
 
 LevelStatus GameWorld::Update()
@@ -130,4 +135,46 @@ bool GameWorld::ifPlantAt(int x, int y) const
   if (!(x >= 0 && x < GAME_COLS && y >= 0 && y < GAME_ROWS))
     return false;
   return m_blocks[y * GAME_COLS + x] == 1;
+}
+
+void GameWorld::generatePlant(int cols)
+{
+  for (int col = 0; col < cols && col < GAME_COLS; col++)
+  {
+    for (int row = 0; row < GAME_ROWS; row++)
+    {
+      if (!ifPlantAt(col, row))
+      {
+        int plantType = randInt(0, 3);
+        if (plantType == 0)
+        {
+          std::shared_ptr<SunFlower> plant = std::make_shared<SunFlower>();
+          plant->setPosition(row, col);
+          m_objects.push_back(plant);
+          setAsPlantAt(col, row);
+        }
+        else if (plantType == 1)
+        {
+          std::shared_ptr<PeaShooter> plant = std::make_shared<PeaShooter>();
+          plant->setPosition(row, col);
+          m_objects.push_back(plant);
+          setAsPlantAt(col, row);
+        }
+        else if (plantType == 2)
+        {
+          std::shared_ptr<Repeater> plant = std::make_shared<Repeater>();
+          plant->setPosition(row, col);
+          m_objects.push_back(plant);
+          setAsPlantAt(col, row);
+        }
+        else
+        {
+          std::shared_ptr<WallNut> plant = std::make_shared<WallNut>();
+          plant->setPosition(row, col);
+          m_objects.push_back(plant);
+          setAsPlantAt(col, row);
+        }
+      }
+    }
+  }
 }
