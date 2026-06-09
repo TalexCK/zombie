@@ -15,3 +15,13 @@ void Repeater::setPosition(int row, int col)
   m_col = col;
   MoveTo(FIRST_COL_CENTER + m_col * LAWN_GRID_WIDTH, FIRST_ROW_CENTER + m_row * LAWN_GRID_HEIGHT);
 }
+
+void Repeater::decreaseHP(int damage)
+{
+  hp -= damage;
+}
+
+bool Repeater::isLive()
+{
+  return hp > 0;
+}

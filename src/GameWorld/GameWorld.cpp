@@ -43,13 +43,84 @@ void GameWorld::Init()
 
 LevelStatus GameWorld::Update()
 {
-  // YOUR CODE HERE
+  for (auto &obj : m_objects)
+  {
+    obj->Update();
+  }
+  m_sunText->SetText(std::to_string(getSunCount()));
+  m_infoText->SetText("Stage " + std::to_string(m_stage) + "/" + std::to_string(TOTAL_ROUNDS) + "  Brains: " + std::to_string(m_brains));
+  for (auto &obj : m_objects)
+  {
+    if (std::shared_ptr<Brain> brain = std::dynamic_pointer_cast<Brain>(obj))
+    {
+      if (!brain->isLive())
+        obj.reset();
+    }
+    if (std::shared_ptr<SunFlower> sunFlower = std::dynamic_pointer_cast<SunFlower>(obj))
+    {
+      if (!sunFlower->isLive())
+      {
+        m_objects.remove(obj);
+        const int col = (sunFlower->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
+        const int row = (sunFlower->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
+        removeAsPlantAt(col, row);
+        obj.reset();
+      }
+    }
+    if (std::shared_ptr<PeaShooter> peaShooter = std::dynamic_pointer_cast<PeaShooter>(obj))
+    {
+      if (!peaShooter->isLive())
+      {
+        m_objects.remove(obj);
+        const int col = (peaShooter->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
+        const int row = (peaShooter->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
+        removeAsPlantAt(col, row);
+        obj.reset();
+      }
+    }
+    if (std::shared_ptr<Repeater> repeater = std::dynamic_pointer_cast<Repeater>(obj))
+    {
+      if (!repeater->isLive())
+      {
+        m_objects.remove(obj);
+        const int col = (repeater->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
+        const int row = (repeater->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
+        removeAsPlantAt(col, row);
+        obj.reset();
+      }
+    }
+    if (std::shared_ptr<WallNut> wallNut = std::dynamic_pointer_cast<WallNut>(obj))
+    {
+      if (!wallNut->isLive())
+      {
+        m_objects.remove(obj);
+        const int col = (wallNut->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
+        const int row = (wallNut->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
+        removeAsPlantAt(col, row);
+        obj.reset();
+      }
+    }
+    m_objects.remove_if([](const std::shared_ptr<GameObject> &p)
+                        { return !p; });
+  }
   return LevelStatus::ONGOING;
 }
 
 void GameWorld::CleanUp()
 {
-  // YOUR CODE HERE
+  m_objects.clear();
+  m_sunText.reset();
+  m_infoText.reset();
+  m_progressBar.reset();
+  m_redLine.reset();
+  m_sunCount = 0;
+  m_stage = 0;
+  m_brains = 0;
+  m_deploymentStartCol = INITIAL_ZOMBIE_DEPLOYMENT_START_COL + ZOMBIE_DEPLOYMENT_BUFFER_COLS;
+  for (int i = 0; i < GAME_ROWS * GAME_COLS; ++i)
+  {
+    m_blocks[i] = 0;
+  }
 }
 
 int GameWorld::getSunCount() const { return m_sunCount; }

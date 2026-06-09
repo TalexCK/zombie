@@ -15,3 +15,13 @@ void SunFlower::setPosition(int row, int col)
   m_col = col;
   MoveTo(FIRST_COL_CENTER + m_col * LAWN_GRID_WIDTH, FIRST_ROW_CENTER + m_row * LAWN_GRID_HEIGHT);
 }
+
+void SunFlower::decreaseHP(int damage)
+{
+  hp -= damage;
+}
+
+bool SunFlower::isLive()
+{
+  return hp > 0;
+}
