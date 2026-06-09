@@ -15,7 +15,7 @@ public:
   void updateColLeft(int col);
 
 private:
-  int colLeft = 2;
+  int m_colLeft = 2;
 };
 
 #endif // !REDLINE_HPP

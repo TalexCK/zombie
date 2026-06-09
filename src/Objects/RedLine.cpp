@@ -11,6 +11,6 @@ void RedLine::OnClick() {}
 
 void RedLine::updateColLeft(int col)
 {
-  colLeft = col;
-  MoveTo(LAWN_GRID_LEFT + colLeft * LAWN_GRID_WIDTH, WINDOW_HEIGHT / 2 - 30);
+  m_colLeft = col;
+  MoveTo(LAWN_GRID_LEFT + m_colLeft * LAWN_GRID_WIDTH, WINDOW_HEIGHT / 2 - 30);
 }

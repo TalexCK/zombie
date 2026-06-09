@@ -103,5 +103,7 @@ bool GameWorld::removeAsPlantAt(int x, int y)
 
 bool GameWorld::ifPlantAt(int x, int y) const
 {
+  if (!(x >= 0 && x < GAME_COLS && y >= 0 && y < GAME_ROWS))
+    return false;
   return m_blocks[y * GAME_COLS + x] == 1;
 }
