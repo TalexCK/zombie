@@ -291,6 +291,7 @@ void GameWorld::placeZombie(int row, int col)
   {
     switch (m_choosedZombieType)
     {
+      // Change to Template Class method
     case ZombieType::REGULAR:
       std::shared_ptr<RegularZombie> zombie = std::make_shared<RegularZombie>();
       zombie->setLocation(col, row);

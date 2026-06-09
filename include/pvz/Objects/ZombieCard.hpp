@@ -4,6 +4,8 @@
 #include "pvz/GameObject/GameObject.hpp"
 #include "pvz/utils.hpp"
 
+#include "pvz/GameWorld/GameWorld.hpp"
+
 enum class ZombieType
 {
   REGULAR,
