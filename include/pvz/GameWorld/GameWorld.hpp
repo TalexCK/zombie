@@ -52,7 +52,7 @@ public:
   bool updateStage()
   {
     m_stage++;
-    if (m_stage > 5)
+    if (m_stage > TOTAL_ROUNDS)
       return false;
     return true;
   }

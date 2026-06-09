@@ -15,7 +15,7 @@ void GameWorld::Init()
   m_sunText->SetColor(0, 0, 0);
 
   m_infoText = std::make_shared<TextBase>(WINDOW_WIDTH - 100, WINDOW_HEIGHT - 40);
-  m_infoText->SetText("Stage 1/5  Brains: 5");
+  m_infoText->SetText("Stage " + std::to_string(m_stage) + "/" + std::to_string(TOTAL_ROUNDS) + "  Brains: " + std::to_string(m_brains));
   m_infoText->SetColor(255, 255, 255);
 
   m_progressBar = std::make_shared<ProgressBar>();

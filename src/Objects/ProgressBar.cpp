@@ -1,7 +1,7 @@
 #include "pvz/Objects/ProgressBar.hpp"
 #include "pvz/GameWorld/GameWorld.hpp"
 
-ImageID GetProgressBarImageForStage(int stage)
+static ImageID GetProgressBarImageForStage(int stage)
 {
   switch (stage)
   {

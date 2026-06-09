@@ -15,7 +15,7 @@ public:
   void setStage(int stage) { m_stage = stage; }
 
 private:
-  int m_stage;
+  int m_stage = 0;
 };
 
 #endif // !PROGRESSBAR_HPP
