@@ -11,6 +11,6 @@ void Brain::OnClick() {}
 
 void Brain::setID(int id)
 {
-  this->id = id;
-  MoveTo(LAWN_GRID_LEFT, FIRST_ROW_CENTER + id * LAWN_GRID_HEIGHT);
+  this->m_id = id;
+  MoveTo(LAWN_GRID_LEFT, FIRST_ROW_CENTER + m_id * LAWN_GRID_HEIGHT);
 }

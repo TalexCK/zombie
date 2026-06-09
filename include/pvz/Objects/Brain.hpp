@@ -15,7 +15,7 @@ public:
   void setID(int id);
 
 private:
-  int id = 0;
+  int m_id = 0;
 };
 
 #endif // !BRAIN_HPP
