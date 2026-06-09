@@ -4,7 +4,7 @@ add_library(
   Plants
   STATIC
   SunFlower.cpp
-  Peashooter.cpp
+  PeaShooter.cpp
   Repeater.cpp
   WallNut.cpp
 )
