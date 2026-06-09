@@ -27,6 +27,7 @@ public:
   void CleanUp() override;
 
 private:
+  std::list<std::shared_ptr<GameObject>> m_objects;
 };
 
 #endif // !GAMEWORLD_HPP__

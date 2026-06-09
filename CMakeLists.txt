@@ -49,6 +49,7 @@ endif()
 
 #↓↓↓↓↓↓↓↓↓↓↓ ADD YOUR SUBDIRECTORIES HERE ↓↓↓↓↓↓↓↓↓↓↓↓
 add_subdirectory(src/Framework/)
+add_subdirectory(src/Objects)
 add_subdirectory(src/GameObject/)
 add_subdirectory(src/GameWorld/)
 #↑↑↑↑↑↑↑↑↑↑↑ ADD YOUR SUBDIRECTORIES HERE ↑↑↑↑↑↑↑↑↑↑↑↑↑
