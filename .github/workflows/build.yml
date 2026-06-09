@@ -3,6 +3,17 @@ name: Build and Quality Checks
 on:
   push:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: build-quality-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-quality:
@@ -21,89 +32,209 @@ jobs:
             cmake \
             ninja-build \
             g++ \
-            clang-tidy \
-            cppcheck \
+            python3 \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
             libglvnd-dev \
-            libx11-dev \
-            libxrandr-dev \
-            libxinerama-dev \
-            libxcursor-dev \
-            libxi-dev
+            mesa-common-dev \
+            xorg-dev
 
       - name: Configure CMake
-        run: |
-          cmake -S . -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wpedantic"
-
-      - name: Build and capture warnings
+        id: configure
+        continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
-          cmake --build build -j 2>&1 | tee build.log
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wpedantic" \
+            2>&1 | tee configure.log
 
-      - name: Run clang-tidy, capture output
+      - name: Build and capture warnings
+        id: build
+        continue-on-error: true
         shell: bash
         run: |
-          files=$(find src include -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) \
-            ! -path '*/Framework/*' \
-            ! -path '*/third_party/*')
-          if [ -n "$files" ]; then
-            clang-tidy $files -p build --quiet 2>&1 | tee clang_tidy.log || true
-          else
-            touch clang_tidy.log
+          set -o pipefail
+
+          if [ ! -d build ]; then
+            echo "build directory does not exist because CMake configure failed." | tee build.log
+            exit 1
           fi
 
-      - name: Run cppcheck, capture output
+          cmake --build build -j 2>&1 | tee build.log
+
+      - name: Run hard checks and generate report for Codex
+        id: hard_checks
         shell: bash
+        env:
+          CONFIGURE_OUTCOME: ${{ steps.configure.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
         run: |
-          cppcheck \
-            --enable=warning,style,performance \
-            --inline-suppr \
-            --suppress=missingIncludeSystem \
-            --suppress='*:*/third_party/*' \
-            --suppress='*:*/src/Framework/*' \
-            --project=build/compile_commands.json \
-            2>&1 | tee cppcheck.log || true
+          set +e
 
-      - name: L01 - No warnings from your own code
-        run: python3 tools/lint.py --check warning-log --build-log build.log
+          mkdir -p quality
+          REPORT="quality/codex_ci_report.md"
+          : > "$REPORT"
 
-      - name: L02 - No manual memory management
-        run: python3 tools/lint.py --check manual-memory
+          echo "# CS100 HW8 Hard Checks Report" >> "$REPORT"
+          echo "" >> "$REPORT"
+          echo "<!-- codex-ci-report -->" >> "$REPORT"
+          echo "" >> "$REPORT"
+          echo "- Commit: \`${GITHUB_SHA}\`" >> "$REPORT"
+          echo "- Event: \`${GITHUB_EVENT_NAME}\`" >> "$REPORT"
+          echo "- Configure outcome: \`${CONFIGURE_OUTCOME}\`" >> "$REPORT"
+          echo "- Build outcome: \`${BUILD_OUTCOME}\`" >> "$REPORT"
+          echo "" >> "$REPORT"
 
-      - name: L03 - New cpp/hpp files and subdirectory CMakeLists
-        run: python3 tools/lint.py --check file-structure
+          status=0
 
-      - name: L04 - No obvious duplicated implementation blocks
-        run: python3 tools/lint.py --check duplicate-code
+          append_log() {
+            local log_file="$1"
 
-      - name: L05 - Use enum class and avoid magic numbers/strings
-        run: python3 tools/lint.py --check enum-magic
+            if [ -f "$log_file" ]; then
+              echo '```text' >> "$REPORT"
+              sed -n '1,220p' "$log_file" >> "$REPORT"
 
-      - name: L06 - Use utils.hpp enum values, not raw IDs
-        run: python3 tools/lint.py --check utils-enums
+              line_count=$(wc -l < "$log_file" | tr -d ' ')
+              if [ "$line_count" -gt 220 ]; then
+                echo "" >> "$REPORT"
+                echo "... truncated, original log has ${line_count} lines ..." >> "$REPORT"
+              fi
 
-      - name: L07 - Data members should not be public
-        run: python3 tools/lint.py --check visibility
+              echo '```' >> "$REPORT"
+            else
+              echo '```text' >> "$REPORT"
+              echo "log file not found: $log_file" >> "$REPORT"
+              echo '```' >> "$REPORT"
+            fi
+          }
 
-      - name: L08 - No concrete type checks
-        run: python3 tools/lint.py --check no-type-checks
+          run_check() {
+            local id="$1"
+            local title="$2"
+            shift 2
 
-      - name: L09 - static/const/virtual usage
-        run: python3 tools/lint.py --check static-const-virtual --clang-tidy-log clang_tidy.log
+            local log_file="quality/${id}.log"
 
-      - name: L10 - Inheritance design heuristics
-        run: python3 tools/lint.py --check inheritance-design
+            echo "## ${id} - ${title}" >> "$REPORT"
+            echo "" >> "$REPORT"
 
-      - name: L11 - Prefer constructor initializer lists
-        run: python3 tools/lint.py --check initializer-list --clang-tidy-log clang_tidy.log
+            "$@" > "$log_file" 2>&1
+            local code=$?
 
-      - name: L12 - No C-style casts
-        run: python3 tools/lint.py --check casts
+            if [ "$code" -eq 0 ]; then
+              echo "Result: ✅ PASS" >> "$REPORT"
+            else
+              echo "Result: ❌ FAIL" >> "$REPORT"
+              status=1
+            fi
 
-      - name: L13 - Avoid global variables and early variable declarations
-        run: python3 tools/lint.py --check globals-scope --cppcheck-log cppcheck.log
+            echo "" >> "$REPORT"
+            append_log "$log_file"
+            echo "" >> "$REPORT"
+          }
+
+          run_check H00 "CMake configure and build must succeed" \
+            bash -lc 'test "$CONFIGURE_OUTCOME" = "success" && test "$BUILD_OUTCOME" = "success"'
+
+          run_check H01 "No compiler warnings from student code" \
+            python3 tools/lint.py --check warning-log --build-log build.log
+
+          run_check H02 "No manual memory management" \
+            python3 tools/lint.py --check manual-memory
+
+          run_check H03 "Required cpp/hpp files and CMake structure" \
+            python3 tools/lint.py --check file-structure
+
+          run_check H04 "Use utils.hpp enum values, not raw IDs" \
+            python3 tools/lint.py --check utils-enums
+
+          run_check H05 "No concrete type checks" \
+            python3 tools/lint.py --check no-type-checks
+
+          run_check H06 "No C-style casts" \
+            python3 tools/lint.py --check casts
+
+          echo "## Final hard-check status" >> "$REPORT"
+          echo "" >> "$REPORT"
+
+          if [ "$status" -eq 0 ]; then
+            echo "✅ All hard checks passed." >> "$REPORT"
+          else
+            echo "❌ Some hard checks failed. See sections above." >> "$REPORT"
+          fi
+
+          echo "hard_status=$status" >> "$GITHUB_OUTPUT"
+
+          cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
+
+          exit 0
+
+      - name: Upload hard check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hw8-hard-check-report
+          path: |
+            quality/codex_ci_report.md
+            configure.log
+            build.log
+            quality/*.log
+
+      - name: Post or update hard check report to PR
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const fs = require("fs");
+
+            const marker = "<!-- codex-ci-report -->";
+            let report = fs.readFileSync("quality/codex_ci_report.md", "utf8");
+
+            if (report.length > 60000) {
+              report =
+                report.slice(0, 60000) +
+                "\n\n... truncated because GitHub comments have a size limit ...";
+            }
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const previous = comments.find(comment =>
+              comment.user.type === "Bot" &&
+              comment.body &&
+              comment.body.includes(marker)
+            );
+
+            if (previous) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: previous.id,
+                body: report,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: report,
+              });
+            }
+
+      - name: Fail if hard checks failed
+        if: always() && steps.hard_checks.outputs.hard_status != '0'
+        run: |
+          echo "One or more CS100 HW8 hard checks failed."
+          exit 1
