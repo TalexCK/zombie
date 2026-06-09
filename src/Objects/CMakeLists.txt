@@ -4,6 +4,7 @@ add_library(
   Objects
   STATIC
   Background.cpp
+  ProgressBar.cpp
 )
 
 target_link_libraries(
