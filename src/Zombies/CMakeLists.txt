@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(
-  GameWorld
+  Zombies
   STATIC
-  GameWorld.cpp
+  RegularZombie.cpp
 )
 
 target_link_libraries(
-  GameWorld
-  GameObject
-  Objects
-  Plants
   Zombies
+  PUBLIC
+  GameObject
 )

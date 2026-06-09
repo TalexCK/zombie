@@ -13,6 +13,9 @@ enum class ZombieType
   POLE,
 };
 
+int getPriceByType(ZombieType type);
+int getFreezeByType(ZombieType type);
+
 class ZombieCard : public GameObject
 {
 public:
@@ -23,8 +26,11 @@ public:
 
   void setType(ZombieType type);
 
+  void setGameWorld(std::shared_ptr<GameWorld> world);
+
 private:
   ZombieType m_type = ZombieType::REGULAR;
+  std::shared_ptr<GameWorld> m_world;
 };
 
 #endif // !ZOMBIECARD_HPP

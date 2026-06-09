@@ -12,9 +12,10 @@
 
 #include "pvz/Objects/ProgressBar.hpp"
 #include "pvz/Objects/RedLine.hpp"
+#include "pvz/Objects/ZombieCard.hpp"
 #include "pvz/utils.hpp"
 
-class GameWorld : public WorldBase
+class GameWorld : public WorldBase, public std::enable_shared_from_this<GameWorld>
 {
 public:
   // Consider:
@@ -53,6 +54,14 @@ public:
 
   void generatePlant(int cols);
 
+  void setZombieChoosed(ZombieType type);
+
+  void cancelZombieChoosed();
+
+  bool isZombieChoosed();
+
+  void placeZombie(int row, int col);
+
 private:
   std::list<std::shared_ptr<GameObject>> m_objects;
   int m_sunCount = 0;
@@ -66,6 +75,9 @@ private:
   int m_blocks[GAME_ROWS * GAME_COLS] = {0};
 
   int m_deploymentStartCol = INITIAL_ZOMBIE_DEPLOYMENT_START_COL + ZOMBIE_DEPLOYMENT_BUFFER_COLS;
+
+  bool m_zombieChoosed = false;
+  ZombieType m_choosedZombieType = ZombieType::REGULAR;
 };
 
 #endif // !GAMEWORLD_HPP__
