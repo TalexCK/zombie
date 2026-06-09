@@ -12,7 +12,7 @@ public:
   void Update() override;
   void OnClick() override;
 
-  void setStage(int stage) { m_stage = stage; }
+  void setStage(int stage);
 
 private:
   int m_stage = 0;

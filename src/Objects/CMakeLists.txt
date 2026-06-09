@@ -5,6 +5,7 @@ add_library(
   STATIC
   Background.cpp
   ProgressBar.cpp
+  Brain.cpp
 )
 
 target_link_libraries(
