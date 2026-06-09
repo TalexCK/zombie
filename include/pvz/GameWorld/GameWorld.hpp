@@ -41,6 +41,10 @@ public:
 
   void initBrains();
 
+  void initZombieCards();
+
+  void initZombiePlaces();
+
   bool setAsPlantAt(int x, int y);
 
   bool removeAsPlantAt(int x, int y);
