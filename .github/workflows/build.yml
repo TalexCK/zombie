@@ -1,0 +1,96 @@
+name: Build and Quality Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  hw8-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++ clang-tidy cppcheck
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wpedantic"
+
+      - name: Build and capture warnings
+        shell: bash
+        run: |
+          set -o pipefail
+          cmake --build build -j 2>&1 | tee build.log
+
+      - name: Run clang-tidy, capture output
+        shell: bash
+        run: |
+          files=$(find src include -type f \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) \
+            ! -path '*/Framework/*' \
+            ! -path '*/third_party/*')
+          if [ -n "$files" ]; then
+            clang-tidy $files -p build --quiet 2>&1 | tee clang_tidy.log || true
+          else
+            touch clang_tidy.log
+          fi
+
+      - name: Run cppcheck, capture output
+        shell: bash
+        run: |
+          cppcheck \
+            --enable=warning,style,performance \
+            --inline-suppr \
+            --suppress=missingIncludeSystem \
+            --suppress='*:*/third_party/*' \
+            --suppress='*:*/src/Framework/*' \
+            --project=build/compile_commands.json \
+            2>&1 | tee cppcheck.log || true
+
+      - name: L01 - No warnings from your own code
+        run: python3 tools/lint.py --check warning-log --build-log build.log
+
+      - name: L02 - No manual memory management
+        run: python3 tools/lint.py --check manual-memory
+
+      - name: L03 - New cpp/hpp files and subdirectory CMakeLists
+        run: python3 tools/lint.py --check file-structure
+
+      - name: L04 - No obvious duplicated implementation blocks
+        run: python3 tools/lint.py --check duplicate-code
+
+      - name: L05 - Use enum class and avoid magic numbers/strings
+        run: python3 tools/lint.py --check enum-magic
+
+      - name: L06 - Use utils.hpp enum values, not raw IDs
+        run: python3 tools/lint.py --check utils-enums
+
+      - name: L07 - Data members should not be public
+        run: python3 tools/lint.py --check visibility
+
+      - name: L08 - No concrete type checks
+        run: python3 tools/lint.py --check no-type-checks
+
+      - name: L09 - static/const/virtual usage
+        run: python3 tools/lint.py --check static-const-virtual --clang-tidy-log clang_tidy.log
+
+      - name: L10 - Inheritance design heuristics
+        run: python3 tools/lint.py --check inheritance-design
+
+      - name: L11 - Prefer constructor initializer lists
+        run: python3 tools/lint.py --check initializer-list --clang-tidy-log clang_tidy.log
+
+      - name: L12 - No C-style casts
+        run: python3 tools/lint.py --check casts
+
+      - name: L13 - Avoid global variables and early variable declarations
+        run: python3 tools/lint.py --check globals-scope --cppcheck-log cppcheck.log
