@@ -11,6 +11,7 @@
 #include "pvz/Framework/TextBase.hpp"
 
 #include "pvz/Objects/ProgressBar.hpp"
+#include "pvz/Objects/RedLine.hpp"
 #include "pvz/utils.hpp"
 
 class GameWorld : public WorldBase
@@ -29,7 +30,9 @@ public:
   void CleanUp() override;
 
   int getSunCount() const;
+
   void addSun(int count);
+
   bool consumeSun(int count);
 
   bool decreaseBrains();
@@ -37,6 +40,12 @@ public:
   bool updateStage();
 
   void initBrains();
+
+  bool setAsPlantAt(int x, int y);
+
+  bool removeAsPlantAt(int x, int y);
+
+  bool ifPlantAt(int x, int y) const;
 
 private:
   std::list<std::shared_ptr<GameObject>> m_objects;
@@ -46,6 +55,11 @@ private:
   std::shared_ptr<TextBase> m_sunText;
   std::shared_ptr<TextBase> m_infoText;
   std::shared_ptr<ProgressBar> m_progressBar;
+  std::shared_ptr<RedLine> m_redLine;
+
+  int m_blocks[45] = {0};
+
+  int m_deploymentStartCol = INITIAL_ZOMBIE_DEPLOYMENT_START_COL + ZOMBIE_DEPLOYMENT_BUFFER_COLS;
 };
 
 #endif // !GAMEWORLD_HPP__

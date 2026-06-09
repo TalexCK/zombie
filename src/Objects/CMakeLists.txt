@@ -6,6 +6,7 @@ add_library(
   Background.cpp
   ProgressBar.cpp
   Brain.cpp
+  RedLine.cpp
 )
 
 target_link_libraries(
