@@ -3,6 +3,8 @@
 #include "pvz/Objects/ProgressBar.hpp"
 #include "pvz/Objects/Brain.hpp"
 #include "pvz/Objects/RedLine.hpp"
+#include "pvz/Objects/ZombieCard.hpp"
+#include "pvz/Objects/ZombiePlace.hpp"
 
 void GameWorld::Init()
 {
@@ -11,6 +13,8 @@ void GameWorld::Init()
 
   addSun(150);
   initBrains();
+  initZombieCards();
+  initZombiePlaces();
   m_sunText = std::make_shared<TextBase>(SUN_COUNTER_X, SUN_COUNTER_Y);
   m_sunText->SetText(std::to_string(getSunCount()));
   m_sunText->SetColor(0, 0, 0);
@@ -23,7 +27,7 @@ void GameWorld::Init()
   m_objects.push_back(m_progressBar);
   m_progressBar->setStage(m_stage);
 
-  m_deploymentStartCol = INITIAL_ZOMBIE_DEPLOYMENT_START_COL + ZOMBIE_DEPLOYMENT_BUFFER_COLS;
+  m_deploymentStartCol = ZOMBIE_DEPLOYMENT_BUFFER_COLS;
 
   m_redLine = std::make_shared<RedLine>();
   m_objects.push_back(m_redLine);
@@ -82,6 +86,26 @@ void GameWorld::initBrains()
     std::shared_ptr<Brain> brain = std::make_shared<Brain>();
     brain->setID(i);
     m_objects.push_back(brain);
+  }
+}
+
+void GameWorld::initZombieCards()
+{
+  for (int i = 0; i < 5; i++)
+  {
+    std::shared_ptr<ZombieCard> zombieCard = std::make_shared<ZombieCard>();
+    zombieCard->setType(static_cast<ZombieType>(i));
+    m_objects.push_back(zombieCard);
+  }
+}
+
+void GameWorld::initZombiePlaces()
+{
+  for (int i = 0; i < GAME_ROWS * (GAME_COLS - m_deploymentStartCol); i++)
+  {
+    std::shared_ptr<ZombiePlace> zombiePlace = std::make_shared<ZombiePlace>();
+    m_objects.push_back(zombiePlace);
+    zombiePlace->setPosition(i % GAME_ROWS, i / GAME_ROWS + m_deploymentStartCol);
   }
 }
 

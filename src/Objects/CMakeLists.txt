@@ -7,6 +7,8 @@ add_library(
   ProgressBar.cpp
   Brain.cpp
   RedLine.cpp
+  ZombieCard.cpp
+  ZombiePlace.cpp
 )
 
 target_link_libraries(
