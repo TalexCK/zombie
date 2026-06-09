@@ -1,7 +1,7 @@
 #include "pvz/Objects/Brain.hpp"
 
 Brain::Brain()
-    : GameObject(ImageID::BRAIN_ICON, LAWN_GRID_LEFT, FIRST_ROW_CENTER, LayerID::UI,
+    : GameObject(ImageID::BRAIN_ICON, 35, FIRST_ROW_CENTER, LayerID::UI,
                  2, 2, AnimID::NO_ANIMATION)
 {
 }
@@ -12,5 +12,5 @@ void Brain::OnClick() {}
 void Brain::setID(int id)
 {
   this->m_id = id;
-  MoveTo(LAWN_GRID_LEFT, FIRST_ROW_CENTER + m_id * LAWN_GRID_HEIGHT);
+  MoveTo(35, FIRST_ROW_CENTER + m_id * LAWN_GRID_HEIGHT);
 }

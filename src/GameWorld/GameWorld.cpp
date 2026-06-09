@@ -2,13 +2,13 @@
 #include "pvz/Objects/Background.hpp"
 #include "pvz/Objects/ProgressBar.hpp"
 #include "pvz/Objects/Brain.hpp"
+#include "pvz/Objects/RedLine.hpp"
 
 void GameWorld::Init()
 {
   m_objects.clear();
   m_objects.push_back(std::make_shared<Background>());
 
-  updateStage();
   addSun(150);
   initBrains();
   m_sunText = std::make_shared<TextBase>(SUN_COUNTER_X, SUN_COUNTER_Y);
@@ -22,6 +22,14 @@ void GameWorld::Init()
   m_progressBar = std::make_shared<ProgressBar>();
   m_objects.push_back(m_progressBar);
   m_progressBar->setStage(m_stage);
+
+  m_deploymentStartCol = INITIAL_ZOMBIE_DEPLOYMENT_START_COL + ZOMBIE_DEPLOYMENT_BUFFER_COLS;
+
+  m_redLine = std::make_shared<RedLine>();
+  m_objects.push_back(m_redLine);
+  m_redLine->updateColLeft(m_deploymentStartCol);
+
+  updateStage();
 }
 
 LevelStatus GameWorld::Update()
@@ -59,6 +67,8 @@ bool GameWorld::decreaseBrains()
 bool GameWorld::updateStage()
 {
   m_stage++;
+  m_deploymentStartCol++;
+  m_redLine->updateColLeft(m_deploymentStartCol);
   if (m_stage > TOTAL_ROUNDS)
     return false;
   return true;
@@ -73,4 +83,27 @@ void GameWorld::initBrains()
     brain->setID(i);
     m_objects.push_back(brain);
   }
+}
+
+bool GameWorld::setAsPlantAt(int x, int y)
+{
+  if (ifPlantAt(x, y))
+    return false;
+  m_blocks[y * GAME_COLS + x] = 1;
+  return true;
+}
+
+bool GameWorld::removeAsPlantAt(int x, int y)
+{
+  if (!ifPlantAt(x, y))
+    return false;
+  m_blocks[y * GAME_COLS + x] = 0;
+  return true;
+}
+
+bool GameWorld::ifPlantAt(int x, int y) const
+{
+  if (!(x >= 0 && x < GAME_COLS && y >= 0 && y < GAME_ROWS))
+    return false;
+  return m_blocks[y * GAME_COLS + x] == 1;
 }
