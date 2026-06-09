@@ -53,6 +53,7 @@ add_subdirectory(src/Objects)
 add_subdirectory(src/GameObject/)
 add_subdirectory(src/GameWorld/)
 add_subdirectory(src/Plants/)
+add_subdirectory(src/Zombies/)
 #↑↑↑↑↑↑↑↑↑↑↑ ADD YOUR SUBDIRECTORIES HERE ↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 add_executable(

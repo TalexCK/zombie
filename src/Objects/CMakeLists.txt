@@ -9,6 +9,7 @@ add_library(
   RedLine.cpp
   ZombieCard.cpp
   ZombiePlace.cpp
+  CardHover.cpp
 )
 
 target_link_libraries(

@@ -5,13 +5,17 @@
 #include "pvz/Objects/RedLine.hpp"
 #include "pvz/Objects/ZombieCard.hpp"
 #include "pvz/Objects/ZombiePlace.hpp"
+#include "pvz/Objects/CardHover.hpp"
 #include "pvz/Plants/SunFlower.hpp"
 #include "pvz/Plants/PeaShooter.hpp"
 #include "pvz/Plants/Repeater.hpp"
 #include "pvz/Plants/WallNut.hpp"
+#include "pvz/Zombies/RegularZombie.hpp"
 
 void GameWorld::Init()
 {
+
+  m_zombieChoosed = false;
   m_objects.clear();
   m_objects.push_back(std::make_shared<Background>());
 
@@ -60,7 +64,6 @@ LevelStatus GameWorld::Update()
     {
       if (!sunFlower->isLive())
       {
-        m_objects.remove(obj);
         const int col = (sunFlower->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
         const int row = (sunFlower->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
         removeAsPlantAt(col, row);
@@ -71,7 +74,6 @@ LevelStatus GameWorld::Update()
     {
       if (!peaShooter->isLive())
       {
-        m_objects.remove(obj);
         const int col = (peaShooter->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
         const int row = (peaShooter->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
         removeAsPlantAt(col, row);
@@ -82,7 +84,6 @@ LevelStatus GameWorld::Update()
     {
       if (!repeater->isLive())
       {
-        m_objects.remove(obj);
         const int col = (repeater->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
         const int row = (repeater->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
         removeAsPlantAt(col, row);
@@ -93,16 +94,22 @@ LevelStatus GameWorld::Update()
     {
       if (!wallNut->isLive())
       {
-        m_objects.remove(obj);
         const int col = (wallNut->GetX() - FIRST_COL_CENTER) / LAWN_GRID_WIDTH;
         const int row = (wallNut->GetY() - FIRST_ROW_CENTER) / LAWN_GRID_HEIGHT;
         removeAsPlantAt(col, row);
         obj.reset();
       }
     }
-    m_objects.remove_if([](const std::shared_ptr<GameObject> &p)
-                        { return !p; });
+    if (std::shared_ptr<CardHover> hover = std::dynamic_pointer_cast<CardHover>(obj))
+    {
+      if (!hover->isLive())
+      {
+        obj.reset();
+      }
+    }
   }
+  m_objects.remove_if([](const std::shared_ptr<GameObject> &p)
+                      { return !p; });
   return LevelStatus::ONGOING;
 }
 
@@ -171,17 +178,19 @@ void GameWorld::initZombieCards()
   {
     std::shared_ptr<ZombieCard> zombieCard = std::make_shared<ZombieCard>();
     zombieCard->setType(type);
+    zombieCard->setGameWorld(shared_from_this());
     m_objects.push_back(zombieCard);
   }
 }
 
 void GameWorld::initZombiePlaces()
 {
-  for (int i = 0; i < GAME_ROWS * (GAME_COLS - m_deploymentStartCol); i++)
+  for (int i = 0; i < GAME_ROWS * GAME_COLS; i++)
   {
     std::shared_ptr<ZombiePlace> zombiePlace = std::make_shared<ZombiePlace>();
     m_objects.push_back(zombiePlace);
-    zombiePlace->setPosition(i % GAME_ROWS, i / GAME_ROWS + m_deploymentStartCol);
+    zombiePlace->setGameWorld(shared_from_this());
+    zombiePlace->setPosition(i % GAME_ROWS, i / GAME_ROWS);
   }
 }
 
@@ -216,22 +225,22 @@ void GameWorld::generatePlant(int cols)
     {
       if (!ifPlantAt(col, row))
       {
-        int plantType = randInt(0, 3);
-        if (plantType == 0)
+        int plantType = randInt(0, 9);
+        if (plantType <= 3)
         {
           std::shared_ptr<SunFlower> plant = std::make_shared<SunFlower>();
           plant->setPosition(row, col);
           m_objects.push_back(plant);
           setAsPlantAt(col, row);
         }
-        else if (plantType == 1)
+        else if (plantType <= 6)
         {
           std::shared_ptr<PeaShooter> plant = std::make_shared<PeaShooter>();
           plant->setPosition(row, col);
           m_objects.push_back(plant);
           setAsPlantAt(col, row);
         }
-        else if (plantType == 2)
+        else if (plantType <= 7)
         {
           std::shared_ptr<Repeater> plant = std::make_shared<Repeater>();
           plant->setPosition(row, col);
@@ -247,5 +256,54 @@ void GameWorld::generatePlant(int cols)
         }
       }
     }
+  }
+}
+
+void GameWorld::setZombieChoosed(ZombieType type)
+{
+  m_zombieChoosed = true;
+  m_choosedZombieType = type;
+}
+
+void GameWorld::cancelZombieChoosed()
+{
+  m_zombieChoosed = false;
+}
+
+bool GameWorld::isZombieChoosed()
+{
+  return m_zombieChoosed;
+}
+
+void GameWorld::placeZombie(int row, int col)
+{
+  if (m_choosedZombieType == ZombieType::BUNGEE)
+  {
+    if (!ifPlantAt(col, row))
+      return;
+  }
+  else
+  {
+    if (col < m_deploymentStartCol || ifPlantAt(col, row))
+      return;
+  }
+  if (consumeSun(getPriceByType(m_choosedZombieType)))
+  {
+    switch (m_choosedZombieType)
+    {
+      // Change to Template Class method
+    case ZombieType::REGULAR:
+      std::shared_ptr<RegularZombie> zombie = std::make_shared<RegularZombie>();
+      zombie->setLocation(col, row);
+      m_objects.push_back(zombie);
+      std::shared_ptr<CardHover> hover = std::make_shared<CardHover>();
+      hover->setLoc(m_choosedZombieType);
+      m_objects.push_back(hover);
+      break;
+    }
+  }
+  else
+  {
+    return;
   }
 }

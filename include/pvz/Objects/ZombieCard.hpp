@@ -4,6 +4,8 @@
 #include "pvz/GameObject/GameObject.hpp"
 #include "pvz/utils.hpp"
 
+#include "pvz/GameWorld/GameWorld.hpp"
+
 enum class ZombieType
 {
   REGULAR,
@@ -12,6 +14,9 @@ enum class ZombieType
   CONEHEAD,
   POLE,
 };
+
+int getPriceByType(ZombieType type);
+int getFreezeByType(ZombieType type);
 
 class ZombieCard : public GameObject
 {
@@ -23,8 +28,11 @@ public:
 
   void setType(ZombieType type);
 
+  void setGameWorld(std::shared_ptr<GameWorld> world);
+
 private:
   ZombieType m_type = ZombieType::REGULAR;
+  std::shared_ptr<GameWorld> m_world;
 };
 
 #endif // !ZOMBIECARD_HPP

@@ -2,7 +2,7 @@
 
 Brain::Brain()
     : GameObject(ImageID::BRAIN_ICON, 35, FIRST_ROW_CENTER, LayerID::UI,
-                 2, 2, AnimID::NO_ANIMATION)
+                 32, 31, AnimID::NO_ANIMATION)
 {
 }
 
