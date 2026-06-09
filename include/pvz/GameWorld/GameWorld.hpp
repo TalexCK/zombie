@@ -51,6 +51,8 @@ public:
 
   bool ifPlantAt(int x, int y) const;
 
+  void generatePlant(int cols);
+
 private:
   std::list<std::shared_ptr<GameObject>> m_objects;
   int m_sunCount = 0;

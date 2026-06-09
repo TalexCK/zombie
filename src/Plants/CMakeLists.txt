@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(
-  GameWorld
+  Plants
   STATIC
-  GameWorld.cpp
+  SunFlower.cpp
+  Peashooter.cpp
+  Repeater.cpp
+  WallNut.cpp
 )
 
 target_link_libraries(
-  GameWorld
-  GameObject
-  Objects
   Plants
+  PUBLIC
+  GameObject
 )

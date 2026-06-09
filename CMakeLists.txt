@@ -52,6 +52,7 @@ add_subdirectory(src/Framework/)
 add_subdirectory(src/Objects)
 add_subdirectory(src/GameObject/)
 add_subdirectory(src/GameWorld/)
+add_subdirectory(src/Plants/)
 #↑↑↑↑↑↑↑↑↑↑↑ ADD YOUR SUBDIRECTORIES HERE ↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 add_executable(
