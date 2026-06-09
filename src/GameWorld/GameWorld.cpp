@@ -1,8 +1,10 @@
 #include "pvz/GameWorld/GameWorld.hpp"
+#include "pvz/Objects/Background.hpp"
 
 void GameWorld::Init()
 {
-  // YOUR CODE HERE
+  m_objects.clear();
+  m_objects.push_back(std::make_shared<Background>());
 }
 
 LevelStatus GameWorld::Update()

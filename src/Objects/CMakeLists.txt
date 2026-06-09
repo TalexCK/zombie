@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(
-  GameWorld
+  Objects
   STATIC
-  GameWorld.cpp
+  Background.cpp
 )
 
 target_link_libraries(
-  GameWorld
-  GameObject
   Objects
+  PUBLIC
+  GameObject
 )
