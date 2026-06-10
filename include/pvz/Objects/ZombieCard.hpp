@@ -4,8 +4,6 @@
 #include "pvz/GameObject/GameObject.hpp"
 #include "pvz/utils.hpp"
 
-#include "pvz/GameWorld/GameWorld.hpp"
-
 enum class ZombieType
 {
   REGULAR,
@@ -14,6 +12,8 @@ enum class ZombieType
   CONEHEAD,
   POLE,
 };
+
+#include "pvz/GameWorld/GameWorld.hpp"
 
 int getPriceByType(ZombieType type);
 int getFreezeByType(ZombieType type);

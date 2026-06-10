@@ -11,6 +11,10 @@
 #include "pvz/Plants/Repeater.hpp"
 #include "pvz/Plants/WallNut.hpp"
 #include "pvz/Zombies/RegularZombie.hpp"
+#include "pvz/Zombies/ConeheadZombie.hpp"
+#include "pvz/Zombies/PoleZombie.hpp"
+#include "pvz/Zombies/BucketZombie.hpp"
+#include "pvz/Zombies/BungeeZombie.hpp"
 
 void GameWorld::Init()
 {
@@ -291,8 +295,8 @@ void GameWorld::placeZombie(int row, int col)
   {
     switch (m_choosedZombieType)
     {
-      // Change to Template Class method
     case ZombieType::REGULAR:
+    {
       std::shared_ptr<RegularZombie> zombie = std::make_shared<RegularZombie>();
       zombie->setLocation(col, row);
       m_objects.push_back(zombie);
@@ -300,6 +304,47 @@ void GameWorld::placeZombie(int row, int col)
       hover->setLoc(m_choosedZombieType);
       m_objects.push_back(hover);
       break;
+    }
+    case ZombieType::CONEHEAD:
+    {
+      std::shared_ptr<ConeheadZombie> zombie = std::make_shared<ConeheadZombie>();
+      zombie->setLocation(col, row);
+      m_objects.push_back(zombie);
+      std::shared_ptr<CardHover> hover = std::make_shared<CardHover>();
+      hover->setLoc(m_choosedZombieType);
+      m_objects.push_back(hover);
+      break;
+    }
+    case ZombieType::BUCKET:
+    {
+      std::shared_ptr<BucketZombie> zombie = std::make_shared<BucketZombie>();
+      zombie->setLocation(col, row);
+      m_objects.push_back(zombie);
+      std::shared_ptr<CardHover> hover = std::make_shared<CardHover>();
+      hover->setLoc(m_choosedZombieType);
+      m_objects.push_back(hover);
+      break;
+    }
+    case ZombieType::POLE:
+    {
+      std::shared_ptr<PoleZombie> zombie = std::make_shared<PoleZombie>();
+      zombie->setLocation(col, row);
+      m_objects.push_back(zombie);
+      std::shared_ptr<CardHover> hover = std::make_shared<CardHover>();
+      hover->setLoc(m_choosedZombieType);
+      m_objects.push_back(hover);
+      break;
+    }
+    case ZombieType::BUNGEE:
+    {
+      std::shared_ptr<BungeeZombie> zombie = std::make_shared<BungeeZombie>();
+      zombie->setLocation(col, row);
+      m_objects.push_back(zombie);
+      std::shared_ptr<CardHover> hover = std::make_shared<CardHover>();
+      hover->setLoc(m_choosedZombieType);
+      m_objects.push_back(hover);
+      break;
+    }
     }
   }
   else

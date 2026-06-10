@@ -7,6 +7,7 @@ add_library(
   PeaShooter.cpp
   Repeater.cpp
   WallNut.cpp
+  Plant.cpp
 )
 
 target_link_libraries(
