@@ -1,21 +1,16 @@
 #ifndef REGULARZOMBIE_HPP
 #define REGULARZOMBIE_HPP
 
-#include "pvz/GameObject/GameObject.hpp"
 #include "pvz/utils.hpp"
+#include "pvz/Zombies/Zombie.hpp"
 
-class RegularZombie : public GameObject
+class RegularZombie : public Zombie
 {
 public:
   RegularZombie();
 
   void Update() override;
   void OnClick() override;
-
-  void setLocation(int col, int row);
-
-private:
-  int hp = 260;
 };
 
 #endif // !REGULARZOMBIE_HPP
