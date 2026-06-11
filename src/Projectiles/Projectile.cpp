@@ -16,7 +16,7 @@ bool Projectile::isActive() const
 
 int Projectile::getDamage() const
 {
-  return 0;
+  return NO_PROJECTILE_DAMAGE;
 }
 
 void Projectile::deactive()

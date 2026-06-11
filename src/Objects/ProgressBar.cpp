@@ -29,14 +29,14 @@ static ImageID GetProgressBarImageForStage(int stage)
 }
 
 ProgressBar::ProgressBar()
-    : GameObject(GetProgressBarImageForStage(1), WINDOW_WIDTH - 100, 10, LayerID::UI,
+    : GameObject(GetProgressBarImageForStage(1), WINDOW_WIDTH - PROGRESS_BAR_X_OFFSET, PROGRESS_BAR_Y, LayerID::UI,
                  0, 0, AnimID::NO_ANIMATION)
 {
 }
 
 void ProgressBar::Update()
 {
-  ProgressBar::ChangeImage(GetProgressBarImageForStage(m_stage * 8 / TOTAL_ROUNDS));
+  ProgressBar::ChangeImage(GetProgressBarImageForStage(m_stage * PROGRESS_METER_STAGE_COUNT / TOTAL_ROUNDS));
 }
 void ProgressBar::OnClick() {}
 

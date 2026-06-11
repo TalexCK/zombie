@@ -40,5 +40,5 @@ void Shooter::updateShooting(bool shooting)
 
 int Shooter::getNextCooldown()
 {
-  return 32;
+  return SHOOTER_COOLDOWN_TICKS;
 }

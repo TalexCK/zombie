@@ -4,7 +4,7 @@
 
 WallNut::WallNut()
     : Plant(ImageID::WALLNUT, FIRST_ROW_CENTER, FIRST_COL_CENTER, LayerID::PLANTS,
-            60, 80, AnimID::IDLE, 3600)
+            PLANT_WIDTH, PLANT_HEIGHT, AnimID::IDLE, WALLNUT_HP)
 {
 }
 
@@ -12,7 +12,7 @@ void WallNut::Update()
 {
   if (!isLive())
     return;
-  if (m_hp <= 1800)
+  if (m_hp <= WALLNUT_CRACKED_HP)
   {
     ChangeImage(ImageID::WALLNUT_CRACKED);
   }

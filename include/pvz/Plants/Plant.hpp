@@ -26,7 +26,7 @@ public:
 protected:
   int m_row = 0;
   int m_col = 0;
-  int m_hp = 100;
+  int m_hp = DEFAULT_PLANT_HP;
   std::weak_ptr<GameWorld> m_world;
 };
 

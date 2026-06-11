@@ -20,7 +20,7 @@ public:
 
 private:
   bool m_running = true;
-  int frame_count = 41;
+  int frame_count = POLE_JUMP_FRAME_COUNT;
 };
 
 #endif // !POLEZOMBIE_HPP

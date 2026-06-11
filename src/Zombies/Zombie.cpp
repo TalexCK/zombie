@@ -52,7 +52,7 @@ void Zombie::decreaseHp(int hp)
 
 bool Zombie::attackPlant(Plant &plant)
 {
-  plant.decreaseHp(4);
+  plant.decreaseHp(ZOMBIE_ATTACK_DAMAGE);
   return true;
 }
 
@@ -63,5 +63,5 @@ void Zombie::afterCollisionCheck()
 void Zombie::moveZombie()
 {
   if (!m_eating)
-    MoveTo(GetX() - 1, GetY());
+    MoveTo(GetX() - ZOMBIE_WALK_SPEED, GetY());
 }
