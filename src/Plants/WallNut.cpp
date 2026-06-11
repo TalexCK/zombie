@@ -17,4 +17,3 @@ void WallNut::Update()
     ChangeImage(ImageID::WALLNUT_CRACKED);
   }
 }
-void WallNut::OnClick() {}

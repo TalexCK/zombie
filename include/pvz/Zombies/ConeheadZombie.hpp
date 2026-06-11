@@ -10,7 +10,6 @@ public:
   ConeheadZombie();
 
   void Update() override;
-  void OnClick() override;
 };
 
 #endif // !CONEHEADZOMBIE_HPP

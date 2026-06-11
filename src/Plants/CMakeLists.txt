@@ -6,6 +6,7 @@ add_library(
   SunFlower.cpp
   PeaShooter.cpp
   Repeater.cpp
+  Shooter.cpp
   WallNut.cpp
   Plant.cpp
 )

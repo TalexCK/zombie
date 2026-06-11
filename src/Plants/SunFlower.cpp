@@ -13,4 +13,8 @@ void SunFlower::Update()
   if (!isLive())
     return;
 }
-void SunFlower::OnClick() {}
+
+bool SunFlower::shouldDropSun() const
+{
+  return true;
+}

@@ -13,7 +13,7 @@ enum class ZombieType
   POLE,
 };
 
-#include "pvz/GameWorld/GameWorld.hpp"
+class GameWorld;
 
 int getPriceByType(ZombieType type);
 int getFreezeByType(ZombieType type);
@@ -32,7 +32,7 @@ public:
 
 private:
   ZombieType m_type = ZombieType::REGULAR;
-  std::shared_ptr<GameWorld> m_world;
+  std::weak_ptr<GameWorld> m_world;
 };
 
 #endif // !ZOMBIECARD_HPP

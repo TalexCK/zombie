@@ -12,15 +12,18 @@ void ZombieCard::Update()
 }
 void ZombieCard::OnClick()
 {
-  if (m_world->isZombieChoosed())
+  auto world = m_world.lock();
+  if (!world)
+    return;
+  if (world->isZombieChoosed())
   {
-    m_world->cancelZombieChoosed();
+    world->cancelZombieChoosed();
   }
   else
   {
-    if (m_world->getSunCount() >= getPriceByType(m_type))
+    if (world->getSunCount() >= getPriceByType(m_type))
     {
-      m_world->setZombieChoosed(m_type);
+      world->setZombieChoosed(m_type);
     }
   }
 }

@@ -1,12 +1,10 @@
 #include "pvz/Zombies/BungeeZombie.hpp"
+#include "pvz/Plants/Plant.hpp"
 
 BungeeZombie::BungeeZombie()
     : Zombie(ImageID::BUNGEE_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
              20, 80, AnimID::NO_ANIMATION, 450)
 {
-  m_zombieType = ZombieType::BUNGEE;
-  frame_count = 30;
-  int stage = 0;
 }
 
 void BungeeZombie::Update()
@@ -41,11 +39,9 @@ void BungeeZombie::Update()
   }
   if (GetY() >= goalYup && stage == 2)
   {
-    m_hp = 0;
     if_live = false;
   }
 }
-void BungeeZombie::OnClick() {}
 
 int BungeeZombie::getStage() const
 {
@@ -67,4 +63,13 @@ void BungeeZombie::setBungeeLocation(int col, int row)
 int BungeeZombie::getFrameCount() const
 {
   return frame_count;
+}
+
+bool BungeeZombie::attackPlant(Plant &plant)
+{
+  if (getStage() == 2 && getFrameCount() == 0)
+  {
+    plant.decreaseHp(100000);
+  }
+  return false;
 }

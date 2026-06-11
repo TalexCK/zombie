@@ -8,9 +8,14 @@ class Pea : public Projectile
 public:
   Pea();
   void Update() override;
-  void OnClick() override;
 
   void setPosition(int col, int row);
+  bool isActive() const override;
+  int getDamage() const override;
+  void deactive() override;
+
+private:
+  bool active = true;
 };
 
 #endif // !PEA_HPP

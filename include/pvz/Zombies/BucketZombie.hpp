@@ -10,7 +10,6 @@ public:
   BucketZombie();
 
   void Update() override;
-  void OnClick() override;
 };
 
 #endif // !BUCKETZOMBIE_HPP

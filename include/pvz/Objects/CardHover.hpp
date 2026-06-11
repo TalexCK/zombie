@@ -16,8 +16,6 @@ public:
 
   void setLoc(ZombieType type);
 
-  bool isLive();
-
 private:
   int tickCounter = 0;
   int goalTick = 0;

@@ -9,8 +9,8 @@ public:
   Plant(ImageID imageID, int x, int y, LayerID layer, int width, int height, AnimID animID, int hp);
   virtual ~Plant() = default;
 
-  virtual void Update() = 0;
-  virtual void OnClick() = 0;
+  void Update() override = 0;
+  void OnClick() override;
 
   void setPosition(int row, int col);
 
@@ -19,12 +19,15 @@ public:
   void setHp(int hp);
 
   void setGameWorld(std::shared_ptr<GameWorld> world);
+  virtual bool canShoot() const;
+  virtual bool shouldDropSun() const;
+  virtual void updateShooting(bool shooting);
 
 protected:
   int m_row = 0;
   int m_col = 0;
   int m_hp = 100;
-  std::shared_ptr<GameWorld> m_world;
+  std::weak_ptr<GameWorld> m_world;
 };
 
 #endif // !PLANT_HPP

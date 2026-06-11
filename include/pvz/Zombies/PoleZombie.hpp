@@ -10,12 +10,13 @@ public:
   PoleZombie();
 
   void Update() override;
-  void OnClick() override;
 
   bool ifRunning() const;
 
   void shouldJump();
   bool ifJumpping() const;
+  bool attackPlant(Plant &plant) override;
+  void afterCollisionCheck() override;
 
 private:
   bool m_running = true;

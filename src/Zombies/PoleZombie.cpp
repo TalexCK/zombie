@@ -1,10 +1,10 @@
 #include "pvz/Zombies/PoleZombie.hpp"
+#include "pvz/Plants/Plant.hpp"
 
 PoleZombie::PoleZombie()
     : Zombie(ImageID::POLE_VAULTING_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
              20, 80, AnimID::RUN, 420)
 {
-  m_zombieType = ZombieType::POLE;
 }
 
 void PoleZombie::Update()
@@ -42,7 +42,6 @@ void PoleZombie::Update()
     MoveTo(35, GetY());
   }
 }
-void PoleZombie::OnClick() {}
 
 bool PoleZombie::ifRunning() const
 {
@@ -59,4 +58,27 @@ void PoleZombie::shouldJump()
 bool PoleZombie::ifJumpping() const
 {
   return frame_count >= 0 && !m_running;
+}
+
+bool PoleZombie::attackPlant(Plant &plant)
+{
+  if (!ifRunning() && !ifJumpping())
+  {
+    plant.decreaseHp(4);
+    return true;
+  }
+  else if (!ifJumpping())
+  {
+    MoveTo(GetX() + 40, GetY());
+    shouldJump();
+  }
+  return false;
+}
+
+void PoleZombie::afterCollisionCheck()
+{
+  if (ifRunning())
+  {
+    MoveTo(GetX() + 40, GetY());
+  }
 }
