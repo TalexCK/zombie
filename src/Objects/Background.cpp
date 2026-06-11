@@ -1,7 +1,7 @@
 #include "pvz/Objects/Background.hpp"
 
 Background::Background()
-    : GameObject(ImageID::BACKGROUND, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::BACKGROUND,
+    : GameObject(ImageID::BACKGROUND, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::BACKGROUND,
                  WINDOW_WIDTH, WINDOW_HEIGHT, AnimID::NO_ANIMATION)
 {
 }

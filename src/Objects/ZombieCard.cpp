@@ -39,19 +39,19 @@ void ZombieCard::setType(ZombieType type)
     break;
   case ZombieType::CONEHEAD:
     ChangeImage(ImageID::ZOMBIE_CARD_CONEHEAD);
-    MoveTo(ZOMBIE_CARD_FIRST_X + 1 * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
+    MoveTo(ZOMBIE_CARD_FIRST_X + ZOMBIE_CARD_CONEHEAD_SLOT * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
     break;
   case ZombieType::BUCKET:
     ChangeImage(ImageID::ZOMBIE_CARD_BUCKET);
-    MoveTo(ZOMBIE_CARD_FIRST_X + 3 * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
+    MoveTo(ZOMBIE_CARD_FIRST_X + ZOMBIE_CARD_BUCKET_SLOT * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
     break;
   case ZombieType::POLE:
     ChangeImage(ImageID::ZOMBIE_CARD_POLE);
-    MoveTo(ZOMBIE_CARD_FIRST_X + 2 * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
+    MoveTo(ZOMBIE_CARD_FIRST_X + ZOMBIE_CARD_POLE_SLOT * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
     break;
   case ZombieType::BUNGEE:
     ChangeImage(ImageID::ZOMBIE_CARD_BUNGEE);
-    MoveTo(ZOMBIE_CARD_FIRST_X + 4 * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
+    MoveTo(ZOMBIE_CARD_FIRST_X + ZOMBIE_CARD_BUNGEE_SLOT * ZOMBIE_CARD_SPACING, ZOMBIE_CARD_Y);
     break;
   }
 }
@@ -61,17 +61,17 @@ int getPriceByType(ZombieType type)
   switch (type)
   {
   case ZombieType::REGULAR:
-    return 50;
+    return REGULAR_ZOMBIE_PRICE;
   case ZombieType::CONEHEAD:
-    return 75;
+    return CONEHEAD_ZOMBIE_PRICE;
   case ZombieType::BUCKET:
-    return 125;
+    return BUCKET_ZOMBIE_PRICE;
   case ZombieType::POLE:
-    return 75;
+    return POLE_ZOMBIE_PRICE;
   case ZombieType::BUNGEE:
-    return 125;
+    return BUNGEE_ZOMBIE_PRICE;
   default:
-    return 0;
+    return UNKNOWN_ZOMBIE_PRICE;
   }
 }
 
@@ -80,17 +80,17 @@ int getFreezeByType(ZombieType type)
   switch (type)
   {
   case ZombieType::REGULAR:
-    return 120;
+    return ZOMBIE_CARD_COOLDOWN_TICKS;
   case ZombieType::CONEHEAD:
-    return 120;
+    return ZOMBIE_CARD_COOLDOWN_TICKS;
   case ZombieType::BUCKET:
-    return 120;
+    return ZOMBIE_CARD_COOLDOWN_TICKS;
   case ZombieType::POLE:
-    return 120;
+    return ZOMBIE_CARD_COOLDOWN_TICKS;
   case ZombieType::BUNGEE:
-    return 120;
+    return ZOMBIE_CARD_COOLDOWN_TICKS;
   default:
-    return 0;
+    return NO_ZOMBIE_CARD_COOLDOWN_TICKS;
   }
 }
 

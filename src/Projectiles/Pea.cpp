@@ -1,7 +1,7 @@
 #include "pvz/Projectiles/Pea.hpp"
 
 Pea::Pea()
-    : Projectile(ImageID::PEA, 0, 0, LayerID::PROJECTILES, 28, 28, AnimID::NO_ANIMATION), active(true)
+    : Projectile(ImageID::PEA, 0, 0, LayerID::PROJECTILES, PEA_SIZE, PEA_SIZE, AnimID::NO_ANIMATION), active(true)
 {
 }
 
@@ -9,7 +9,7 @@ void Pea::Update()
 {
   if (!isLive())
     return;
-  MoveTo(GetX() + 8, GetY());
+  MoveTo(GetX() + PEA_SPEED, GetY());
   if (GetX() > WINDOW_WIDTH)
   {
     kill();
@@ -18,7 +18,8 @@ void Pea::Update()
 
 void Pea::setPosition(int row, int col)
 {
-  MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH + 30, FIRST_ROW_CENTER + row * LAWN_GRID_HEIGHT + 12);
+  MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH + PEA_START_X_OFFSET,
+         FIRST_ROW_CENTER + row * LAWN_GRID_HEIGHT + PEA_START_Y_OFFSET);
 }
 
 void Pea::deactive()
@@ -33,5 +34,5 @@ bool Pea::isActive() const
 
 int Pea::getDamage() const
 {
-  return 24;
+  return PEA_DAMAGE;
 }

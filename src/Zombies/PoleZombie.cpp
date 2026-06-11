@@ -2,8 +2,8 @@
 #include "pvz/Plants/Plant.hpp"
 
 PoleZombie::PoleZombie()
-    : Zombie(ImageID::POLE_VAULTING_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
-             20, 80, AnimID::RUN, 420)
+    : Zombie(ImageID::POLE_VAULTING_ZOMBIE, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::ZOMBIES,
+             ZOMBIE_WIDTH, ZOMBIE_HEIGHT, AnimID::RUN, POLE_ZOMBIE_HP)
 {
 }
 
@@ -18,7 +18,7 @@ void PoleZombie::Update()
   else if (frame_count == 0 && !m_running)
   {
     PlayAnimation(AnimID::WALK);
-    MoveTo(GetX() - 150, GetY());
+    MoveTo(GetX() - POLE_JUMP_FORWARD_DISTANCE, GetY());
     frame_count = -1;
   }
   else
@@ -27,19 +27,19 @@ void PoleZombie::Update()
     {
       if (m_running)
       {
-        MoveTo(GetX() - 1, GetY());
+        MoveTo(GetX() - ZOMBIE_WALK_SPEED, GetY());
       }
-      MoveTo(GetX() - 1, GetY());
+      MoveTo(GetX() - ZOMBIE_WALK_SPEED, GetY());
     }
     if (m_running)
     {
-      MoveTo(GetX() - 40, GetY());
+      MoveTo(GetX() - POLE_JUMP_COLLISION_OFFSET, GetY());
     }
   }
-  if (GetX() < 35)
+  if (GetX() < ZOMBIE_LEFT_BOUNDARY_X)
   {
     ChangeImage(ImageID::NONE);
-    MoveTo(35, GetY());
+    MoveTo(ZOMBIE_LEFT_BOUNDARY_X, GetY());
   }
 }
 
@@ -51,7 +51,7 @@ bool PoleZombie::ifRunning() const
 void PoleZombie::shouldJump()
 {
   m_running = false;
-  frame_count = 41;
+  frame_count = POLE_JUMP_FRAME_COUNT;
   PlayAnimation(AnimID::JUMP);
 }
 
@@ -64,12 +64,12 @@ bool PoleZombie::attackPlant(Plant &plant)
 {
   if (!ifRunning() && !ifJumpping())
   {
-    plant.decreaseHp(4);
+    plant.decreaseHp(ZOMBIE_ATTACK_DAMAGE);
     return true;
   }
   else if (!ifJumpping())
   {
-    MoveTo(GetX() + 40, GetY());
+    MoveTo(GetX() + POLE_JUMP_COLLISION_OFFSET, GetY());
     shouldJump();
   }
   return false;
@@ -79,6 +79,6 @@ void PoleZombie::afterCollisionCheck()
 {
   if (ifRunning())
   {
-    MoveTo(GetX() + 40, GetY());
+    MoveTo(GetX() + POLE_JUMP_COLLISION_OFFSET, GetY());
   }
 }

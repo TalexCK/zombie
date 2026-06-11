@@ -29,7 +29,7 @@ public:
 protected:
   void moveZombie();
 
-  int m_hp = 260;
+  int m_hp = REGULAR_ZOMBIE_HP;
   bool m_eating = false;
   AnimID m_currentAnim = AnimID::WALK;
 };

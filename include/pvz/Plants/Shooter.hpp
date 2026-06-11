@@ -17,7 +17,7 @@ protected:
   virtual int getNextCooldown();
 
 private:
-  int cooldown = 32;
+  int cooldown = SHOOTER_COOLDOWN_TICKS;
   bool ifShooting = false;
 };
 

@@ -79,7 +79,7 @@ private:
   std::shared_ptr<ProgressBar> m_progressBar;
   std::shared_ptr<RedLine> m_redLine;
 
-  int m_blocks[GAME_ROWS * GAME_COLS] = {0};
+  int m_blocks[GAME_ROWS * GAME_COLS] = {EMPTY_PLANT_BLOCK};
 
   int m_deploymentStartCol = INITIAL_ZOMBIE_DEPLOYMENT_START_COL + ZOMBIE_DEPLOYMENT_BUFFER_COLS;
 

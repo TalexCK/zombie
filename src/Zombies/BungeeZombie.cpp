@@ -2,8 +2,8 @@
 #include "pvz/Plants/Plant.hpp"
 
 BungeeZombie::BungeeZombie()
-    : Zombie(ImageID::BUNGEE_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
-             20, 80, AnimID::NO_ANIMATION, 450)
+    : Zombie(ImageID::BUNGEE_ZOMBIE, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::ZOMBIES,
+             ZOMBIE_WIDTH, ZOMBIE_HEIGHT, AnimID::NO_ANIMATION, BUNGEE_ZOMBIE_HP)
 {
 }
 
@@ -15,11 +15,11 @@ void BungeeZombie::Update()
   {
     frame_count = -1;
   }
-  if (getStage() == 0)
+  if (getStage() == BUNGEE_DESCENDING_STAGE)
   {
-    MoveTo(GetX(), GetY() - 6);
+    MoveTo(GetX(), GetY() - BUNGEE_VERTICAL_SPEED);
   }
-  else if (getStage() == 1)
+  else if (getStage() == BUNGEE_GRABBING_STAGE)
   {
     frame_count--;
     if (frame_count == 0)
@@ -30,14 +30,14 @@ void BungeeZombie::Update()
   }
   else
   {
-    MoveTo(GetX(), GetY() + 6);
+    MoveTo(GetX(), GetY() + BUNGEE_VERTICAL_SPEED);
   }
-  if (GetY() <= goalY && stage == 0)
+  if (GetY() <= goalY && stage == BUNGEE_DESCENDING_STAGE)
   {
     ChangeImage(ImageID::BUNGEE_ZOMBIE_GRAB);
     nextStage();
   }
-  if (GetY() >= goalYup && stage == 2)
+  if (GetY() >= goalYup && stage == BUNGEE_ASCENDING_STAGE)
   {
     if_live = false;
   }
@@ -56,8 +56,9 @@ void BungeeZombie::nextStage()
 void BungeeZombie::setBungeeLocation(int col, int row)
 {
   goalY = FIRST_ROW_CENTER + row * LAWN_GRID_HEIGHT;
-  goalYup = FIRST_ROW_CENTER + (2 * row + 3) * LAWN_GRID_HEIGHT / 2;
-  MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH, FIRST_ROW_CENTER + (2 * row + 3) * LAWN_GRID_HEIGHT / 2);
+  goalYup = FIRST_ROW_CENTER + (BUNGEE_TOP_ROW_SCALE * row + BUNGEE_TOP_ROW_OFFSET) * LAWN_GRID_HEIGHT / BUNGEE_TOP_ROW_DIVISOR;
+  MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH,
+         FIRST_ROW_CENTER + (BUNGEE_TOP_ROW_SCALE * row + BUNGEE_TOP_ROW_OFFSET) * LAWN_GRID_HEIGHT / BUNGEE_TOP_ROW_DIVISOR);
 }
 
 int BungeeZombie::getFrameCount() const
@@ -67,9 +68,9 @@ int BungeeZombie::getFrameCount() const
 
 bool BungeeZombie::attackPlant(Plant &plant)
 {
-  if (getStage() == 2 && getFrameCount() == 0)
+  if (getStage() == BUNGEE_ASCENDING_STAGE && getFrameCount() == 0)
   {
-    plant.decreaseHp(100000);
+    plant.decreaseHp(INSTANT_KILL_DAMAGE);
   }
   return false;
 }
