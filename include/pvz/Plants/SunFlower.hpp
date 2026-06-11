@@ -10,7 +10,7 @@ public:
   SunFlower();
 
   void Update() override;
-  void OnClick() override;
+  bool shouldDropSun() const override;
 };
 
 #endif // !SUNFLOWER_HPP

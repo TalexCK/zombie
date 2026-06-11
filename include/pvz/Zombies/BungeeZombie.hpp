@@ -10,13 +10,13 @@ public:
   BungeeZombie();
 
   void Update() override;
-  void OnClick() override;
 
   int getStage() const;
   void nextStage();
 
   void setBungeeLocation(int col, int row);
   int getFrameCount() const;
+  bool attackPlant(Plant &plant) override;
 
 private:
   int stage = 0;

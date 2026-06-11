@@ -28,7 +28,7 @@ bool GameObject::ifCrash(int x1, int y1, int x2, int y2, int width1, int height1
   return (x2 + width2 / 2 - (x1 - width1 / 2) < width1 + width2) && (y2 + height2 / 2 - (y1 - height1 / 2) < height1 + height2);
 }
 
-bool GameObject::ifCrashObject(GameObject &other)
+bool GameObject::ifCrashObject(const GameObject &other) const
 {
   return ifCrash(GetX(), GetY(), other.GetX(), other.GetY(), GetWidth(), GetHeight(), other.GetWidth(), other.GetHeight());
 }
@@ -63,7 +63,27 @@ bool GameObject::ifSun() const
   return if_sun;
 }
 
+bool GameObject::ifBrain() const
+{
+  return if_brain;
+}
+
+bool GameObject::ifProjectile() const
+{
+  return if_projectile;
+}
+
 void GameObject::setSun()
 {
   if_sun = true;
+}
+
+void GameObject::setBrain()
+{
+  if_brain = true;
+}
+
+void GameObject::setProjectile()
+{
+  if_projectile = true;
 }

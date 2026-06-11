@@ -2,21 +2,16 @@
 #define REPEATER_HPP
 
 #include "pvz/utils.hpp"
-#include "pvz/Plants/Plant.hpp"
+#include "pvz/Plants/Shooter.hpp"
 
-class Repeater : public Plant
+class Repeater : public Shooter
 {
 public:
   Repeater();
 
-  void Update() override;
-  void OnClick() override;
-
-  void updateShooting(bool shooting);
-
 private:
-  int cooldown = 32;
-  bool ifShooting = false;
+  int getNextCooldown() override;
+
   bool ifSecond = false;
 };
 

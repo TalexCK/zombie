@@ -26,6 +26,8 @@ public:
 
   void Init() override;
 
+  void initStage();
+
   LevelStatus Update() override;
 
   void CleanUp() override;
@@ -58,11 +60,11 @@ public:
 
   void cancelZombieChoosed();
 
-  bool isZombieChoosed();
+  bool isZombieChoosed() const;
 
   bool placeZombie(int row, int col);
 
-  std::list<std::shared_ptr<GameObject>> getObjects();
+  std::list<std::shared_ptr<GameObject>> getObjects() const;
 
   void generatePea(int row, int col);
 

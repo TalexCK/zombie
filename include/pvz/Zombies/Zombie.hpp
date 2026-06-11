@@ -6,14 +6,16 @@
 
 #include "pvz/Objects/ZombieCard.hpp"
 
+class Plant;
+
 class Zombie : public GameObject
 {
 public:
   Zombie(ImageID imageID, int x, int y, LayerID layer, int width, int height, AnimID animID, int hp);
   virtual ~Zombie() = default;
 
-  virtual void Update() = 0;
-  virtual void OnClick() = 0;
+  void Update() override;
+  void OnClick() override;
 
   void setLocation(int col, int row);
 
@@ -21,14 +23,15 @@ public:
   void setEating(bool eating);
 
   void decreaseHp(int hp);
-
-  ZombieType getZombieType() const;
+  virtual bool attackPlant(Plant &plant);
+  virtual void afterCollisionCheck();
 
 protected:
+  void moveZombie();
+
   int m_hp = 260;
   bool m_eating = false;
   AnimID m_currentAnim = AnimID::WALK;
-  ZombieType m_zombieType;
 };
 
 #endif // !ZOMBIE_HPP

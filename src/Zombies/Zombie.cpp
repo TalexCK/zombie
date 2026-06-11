@@ -1,13 +1,19 @@
 #include "pvz/Zombies/Zombie.hpp"
+#include "pvz/Plants/Plant.hpp"
 
 Zombie::Zombie(ImageID imageID, int x, int y, LayerID layer, int width, int height, AnimID animID, int hp)
-    : GameObject(imageID, x, y, layer, width, height, animID)
+    : GameObject(imageID, x, y, layer, width, height, animID), m_hp(hp)
 {
-  m_hp = hp;
   setZombie();
 }
 
-void Zombie::Update() {}
+void Zombie::Update()
+{
+  if (!isLive())
+    return;
+  moveZombie();
+}
+
 void Zombie::OnClick() {}
 
 bool Zombie::isEating() const
@@ -44,7 +50,18 @@ void Zombie::decreaseHp(int hp)
   }
 }
 
-ZombieType Zombie::getZombieType() const
+bool Zombie::attackPlant(Plant &plant)
 {
-  return m_zombieType;
+  plant.decreaseHp(4);
+  return true;
+}
+
+void Zombie::afterCollisionCheck()
+{
+}
+
+void Zombie::moveZombie()
+{
+  if (!m_eating)
+    MoveTo(GetX() - 1, GetY());
 }

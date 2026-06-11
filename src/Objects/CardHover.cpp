@@ -39,8 +39,3 @@ void CardHover::setLoc(ZombieType type)
   tickCounter = 0;
   goalTick = getFreezeByType(type);
 }
-
-bool CardHover::isLive()
-{
-  return if_live;
-}

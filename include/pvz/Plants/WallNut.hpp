@@ -10,7 +10,6 @@ public:
   WallNut();
 
   void Update() override;
-  void OnClick() override;
 };
 
 #endif // !WALLNUT_HPP

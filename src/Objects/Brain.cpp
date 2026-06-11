@@ -4,6 +4,7 @@ Brain::Brain()
     : GameObject(ImageID::BRAIN_ICON, 35, FIRST_ROW_CENTER, LayerID::UI,
                  32, 31, AnimID::NO_ANIMATION)
 {
+  setBrain();
 }
 
 void Brain::Update() {}

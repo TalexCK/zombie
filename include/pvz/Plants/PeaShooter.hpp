@@ -2,21 +2,12 @@
 #define PEASHOOTER_HPP
 
 #include "pvz/utils.hpp"
-#include "pvz/Plants/Plant.hpp"
+#include "pvz/Plants/Shooter.hpp"
 
-class PeaShooter : public Plant
+class PeaShooter : public Shooter
 {
 public:
   PeaShooter();
-
-  void Update() override;
-  void OnClick() override;
-
-  void updateShooting(bool shooting);
-
-private:
-  int cooldown = 32;
-  bool ifShooting = false;
 };
 
 #endif // !PEASHOOTER_HPP

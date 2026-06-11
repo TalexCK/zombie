@@ -10,8 +10,11 @@ ZombiePlace::ZombiePlace()
 void ZombiePlace::Update() {}
 void ZombiePlace::OnClick()
 {
+  auto world = m_world.lock();
+  if (!world)
+    return;
   bool isCrash = false;
-  for (auto &obj : m_world->getObjects())
+  for (auto &obj : world->getObjects())
   {
     if (ifCrashObject(*obj) && obj->ifZombie())
     {
@@ -19,11 +22,11 @@ void ZombiePlace::OnClick()
       break;
     }
   }
-  if (m_world->isZombieChoosed() && !isCrash)
+  if (world->isZombieChoosed() && !isCrash)
   {
-    if (m_world->placeZombie(m_row, m_col))
+    if (world->placeZombie(m_row, m_col))
     {
-      m_world->cancelZombieChoosed();
+      world->cancelZombieChoosed();
     }
   }
 }

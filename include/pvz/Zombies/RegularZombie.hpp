@@ -8,9 +8,6 @@ class RegularZombie : public Zombie
 {
 public:
   RegularZombie();
-
-  void Update() override;
-  void OnClick() override;
 };
 
 #endif // !REGULARZOMBIE_HPP

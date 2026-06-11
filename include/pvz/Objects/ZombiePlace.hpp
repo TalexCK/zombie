@@ -4,7 +4,7 @@
 #include "pvz/GameObject/GameObject.hpp"
 #include "pvz/utils.hpp"
 
-#include "pvz/GameWorld/GameWorld.hpp"
+class GameWorld;
 
 class ZombiePlace : public GameObject
 {
@@ -22,7 +22,7 @@ private:
   int m_row = 0;
   int m_col = 0;
 
-  std::shared_ptr<GameWorld> m_world;
+  std::weak_ptr<GameWorld> m_world;
 };
 
 #endif // !ZOMBIEPLACE_HPP

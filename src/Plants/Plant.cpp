@@ -1,9 +1,8 @@
 #include "pvz/Plants/Plant.hpp"
 
 Plant::Plant(ImageID imageID, int x, int y, LayerID layer, int width, int height, AnimID animID, int hp)
-    : GameObject(imageID, x, y, layer, width, height, animID)
+    : GameObject(imageID, x, y, layer, width, height, animID), m_hp(hp)
 {
-  m_hp = hp;
   setPlant();
 }
 
@@ -35,4 +34,18 @@ void Plant::setHp(int hp)
 void Plant::setGameWorld(std::shared_ptr<GameWorld> world)
 {
   m_world = world;
+}
+
+bool Plant::canShoot() const
+{
+  return false;
+}
+
+bool Plant::shouldDropSun() const
+{
+  return false;
+}
+
+void Plant::updateShooting(bool)
+{
 }

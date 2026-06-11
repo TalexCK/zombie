@@ -16,16 +16,25 @@
 #include "pvz/Zombies/BucketZombie.hpp"
 #include "pvz/Zombies/BungeeZombie.hpp"
 #include "pvz/Objects/Sun.hpp"
+#include "pvz/Projectiles/Projectile.hpp"
 #include "pvz/Projectiles/Pea.hpp"
 
 void GameWorld::Init()
 {
+  initStage();
+}
 
-  m_zombieChoosed = false;
+void GameWorld::initStage()
+{
   m_objects.clear();
+  m_sunText.reset();
+  m_infoText.reset();
+  m_zombieChoosed = false;
   m_objects.push_back(std::make_shared<Background>());
 
   m_stageEnded = false;
+
+  m_sunCount = 0;
 
   addSun(150);
   initBrains();
@@ -42,14 +51,17 @@ void GameWorld::Init()
   m_progressBar = std::make_shared<ProgressBar>();
   m_objects.push_back(m_progressBar);
 
-  m_deploymentStartCol = ZOMBIE_DEPLOYMENT_BUFFER_COLS;
-
   m_redLine = std::make_shared<RedLine>();
   m_objects.push_back(m_redLine);
-  m_redLine->updateColLeft(m_deploymentStartCol);
 
   updateStage();
   m_progressBar->setStage(m_stage);
+  m_deploymentStartCol = ZOMBIE_DEPLOYMENT_BUFFER_COLS + m_stage;
+  m_redLine->updateColLeft(m_deploymentStartCol);
+  for (int i = 0; i < GAME_ROWS * GAME_COLS; ++i)
+  {
+    m_blocks[i] = 0;
+  }
   generatePlant(m_deploymentStartCol - 1);
 }
 
@@ -72,86 +84,64 @@ LevelStatus GameWorld::Update()
     if (obj->ifZombie())
     {
       bool eating = false;
-      std::shared_ptr<Zombie> zombie = std::dynamic_pointer_cast<Zombie>(obj);
+      std::shared_ptr<Zombie> zombie = std::static_pointer_cast<Zombie>(obj);
       for (auto &other : m_objects)
       {
         if (obj != other && obj->ifCrashObject(*other))
         {
           if (other->ifPlant())
           {
-            if (zombie->getZombieType() != ZombieType::POLE && zombie->getZombieType() != ZombieType::BUNGEE)
+            std::shared_ptr<Plant> plant = std::static_pointer_cast<Plant>(other);
+            if (zombie->attackPlant(*plant))
             {
               eating = true;
-              std::shared_ptr<Plant> plant = std::dynamic_pointer_cast<Plant>(other);
-              plant->decreaseHp(4);
-              continue;
             }
-            else if (zombie->getZombieType() == ZombieType::POLE)
-            {
-              std::shared_ptr<PoleZombie> poleZombie = std::dynamic_pointer_cast<PoleZombie>(obj);
-              if (!poleZombie->ifRunning() && !poleZombie->ifJumpping())
-              {
-                eating = true;
-                std::shared_ptr<Plant> plant = std::dynamic_pointer_cast<Plant>(other);
-                plant->decreaseHp(4);
-                continue;
-              }
-              else if (!poleZombie->ifJumpping())
-              {
-                poleZombie->MoveTo(poleZombie->GetX() + 40, poleZombie->GetY());
-                poleZombie->shouldJump();
-              }
-            }
-            else if (zombie->getZombieType() == ZombieType::BUNGEE)
-            {
-              std::shared_ptr<BungeeZombie> bungeeZombie = std::dynamic_pointer_cast<BungeeZombie>(obj);
-              if (bungeeZombie->getStage() == 2 && bungeeZombie->getFrameCount() == 0)
-              {
-                std::shared_ptr<Plant> plant = std::dynamic_pointer_cast<Plant>(other);
-                plant->decreaseHp(100000);
-                continue;
-              }
-            }
+            continue;
           }
-          else if (std::shared_ptr<Brain> brain = std::dynamic_pointer_cast<Brain>(other))
+          else if (other->ifBrain())
           {
+            std::shared_ptr<Brain> brain = std::static_pointer_cast<Brain>(other);
             brain->die();
             zombie->decreaseHp(100000);
             if (decreaseBrains())
             {
-              m_stageEnded = true;
+              if (m_stage < TOTAL_ROUNDS)
+              {
+                m_stageEnded = true;
+                initStage();
+                m_stageEnded = false;
+                return LevelStatus::ONGOING;
+              }
+              else
+              {
+                m_infoText->SetText("You Win!");
+                return LevelStatus::WINNING;
+              }
             }
             continue;
           }
-          else if (std::shared_ptr<Pea> pea = std::dynamic_pointer_cast<Pea>(other))
+          else if (other->ifProjectile())
           {
-            pea->kill();
-            zombie->decreaseHp(24);
-            continue;
+            std::shared_ptr<Projectile> projectile = std::static_pointer_cast<Projectile>(other);
+            if (projectile->isActive())
+            {
+              projectile->kill();
+              zombie->decreaseHp(projectile->getDamage());
+              projectile->deactive();
+              continue;
+            }
           }
         }
-        if (std::shared_ptr<PeaShooter> peaShooter = std::dynamic_pointer_cast<PeaShooter>(other))
+        if (other->ifPlant())
         {
-          if (peaShooter->GetX() < zombie->GetX() && peaShooter->GetY() == zombie->GetY())
+          std::shared_ptr<Plant> plant = std::static_pointer_cast<Plant>(other);
+          if (plant->canShoot() && plant->GetX() < zombie->GetX() && plant->GetY() == zombie->GetY())
           {
-            peaShooter->updateShooting(true);
-          }
-        }
-        if (std::shared_ptr<Repeater> repeater = std::dynamic_pointer_cast<Repeater>(other))
-        {
-          if (repeater->GetX() < zombie->GetX() && repeater->GetY() == zombie->GetY())
-          {
-            repeater->updateShooting(true);
+            plant->updateShooting(true);
           }
         }
       }
-      if (std::shared_ptr<PoleZombie> poleZombie = std::dynamic_pointer_cast<PoleZombie>(obj))
-      {
-        if (poleZombie->ifRunning())
-        {
-          poleZombie->MoveTo(poleZombie->GetX() + 40, poleZombie->GetY());
-        }
-      }
+      zombie->afterCollisionCheck();
       if (!zombie->isEating() && eating)
         zombie->setEating(eating);
       if (zombie->isEating() && !eating)
@@ -161,22 +151,17 @@ LevelStatus GameWorld::Update()
 
   for (auto &obj : m_objects)
   {
-    if (std::shared_ptr<Brain> brain = std::dynamic_pointer_cast<Brain>(obj))
-    {
-      if (!brain->isLive())
-        obj.reset();
-      continue;
-    }
     if (obj->ifPlant())
     {
       if (!obj->isLive())
       {
-        if (std::shared_ptr<SunFlower> sunflower = std::dynamic_pointer_cast<SunFlower>(obj))
+        std::shared_ptr<Plant> plant = std::static_pointer_cast<Plant>(obj);
+        if (plant->shouldDropSun())
         {
           for (int i = 0; i < 6; i++)
           {
             std::shared_ptr<Sun> sun = std::make_shared<Sun>();
-            sun->setPosition(sunflower->GetX(), sunflower->GetY());
+            sun->setPosition(plant->GetX(), plant->GetY());
             m_waitingObjects.push_back(sun);
           }
         }
@@ -187,48 +172,27 @@ LevelStatus GameWorld::Update()
       }
       continue;
     }
-    if (obj->ifSun())
+    if (obj->ifSun() && !obj->isLive())
     {
-      if (!obj->isLive())
-      {
-        obj.reset();
-        addSun(SUN_VALUE);
-      }
+      obj.reset();
+      addSun(SUN_VALUE);
       continue;
     }
-    if (obj->ifZombie())
-    {
-      if (!obj->isLive())
-      {
-        obj.reset();
-      }
-      continue;
-    }
-    if (std::shared_ptr<CardHover> hover = std::dynamic_pointer_cast<CardHover>(obj))
-    {
-      if (!hover->isLive())
-      {
-        obj.reset();
-      }
-      continue;
-    }
-    if (std::shared_ptr<Pea> pea = std::dynamic_pointer_cast<Pea>(obj))
-    {
-      if (!pea->isLive())
-      {
-        obj.reset();
-      }
-      continue;
-    }
+    if (!obj->isLive())
+      obj.reset();
   }
   m_objects.remove_if([](const std::shared_ptr<GameObject> &obj)
                       { return obj == nullptr; });
+
+  int zombieCount = 0;
+  int collectiveSunCount = 0;
 
   for (auto &obj : m_objects)
   {
     if (obj->ifZombie())
     {
-      std::shared_ptr<Zombie> zombie = std::dynamic_pointer_cast<Zombie>(obj);
+      zombieCount++;
+      std::shared_ptr<Zombie> zombie = std::static_pointer_cast<Zombie>(obj);
       bool eating = false;
       for (auto &other : m_objects)
       {
@@ -243,6 +207,14 @@ LevelStatus GameWorld::Update()
       if (zombie->isEating() && !eating)
         zombie->setEating(eating);
     }
+    if (obj->ifSun())
+    {
+      collectiveSunCount++;
+    }
+  }
+  if (m_brains > 0 && m_sunCount < 50 && zombieCount == 0 && collectiveSunCount == 0)
+  {
+    return LevelStatus::LOSING;
   }
   return LevelStatus::ONGOING;
 }
@@ -288,7 +260,6 @@ bool GameWorld::decreaseBrains()
 bool GameWorld::updateStage()
 {
   m_stage++;
-  m_deploymentStartCol++;
   m_redLine->updateColLeft(m_deploymentStartCol);
   if (m_stage > TOTAL_ROUNDS)
     return false;
@@ -408,7 +379,7 @@ void GameWorld::cancelZombieChoosed()
   m_zombieChoosed = false;
 }
 
-bool GameWorld::isZombieChoosed()
+bool GameWorld::isZombieChoosed() const
 {
   return m_zombieChoosed;
 }
@@ -487,7 +458,7 @@ bool GameWorld::placeZombie(int row, int col)
   return true;
 }
 
-std::list<std::shared_ptr<GameObject>> GameWorld::getObjects()
+std::list<std::shared_ptr<GameObject>> GameWorld::getObjects() const
 {
   return m_objects;
 }
