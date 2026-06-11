@@ -21,7 +21,6 @@ public:
 private:
   int tickCounter = 0;
   int goalTick = 0;
-  bool ifLive = true;
 };
 
 #endif // !CARDHOVER_HPP

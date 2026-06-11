@@ -60,10 +60,13 @@ public:
 
   bool isZombieChoosed();
 
-  void placeZombie(int row, int col);
+  bool placeZombie(int row, int col);
+
+  std::list<std::shared_ptr<GameObject>> getObjects();
 
 private:
   std::list<std::shared_ptr<GameObject>> m_objects;
+  std::list<std::shared_ptr<GameObject>> m_waitingObjects;
   int m_sunCount = 0;
   int m_stage = 0;
   int m_brains = 0;
@@ -78,6 +81,8 @@ private:
 
   bool m_zombieChoosed = false;
   ZombieType m_choosedZombieType = ZombieType::REGULAR;
+
+  bool m_stageEnded = false;
 };
 
 #endif // !GAMEWORLD_HPP__

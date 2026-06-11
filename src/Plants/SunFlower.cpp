@@ -4,7 +4,7 @@
 
 SunFlower::SunFlower()
     : Plant(ImageID::SUNFLOWER, FIRST_ROW_CENTER, FIRST_COL_CENTER, LayerID::PLANTS,
-            0, 0, AnimID::IDLE, 100)
+            60, 80, AnimID::IDLE, 340)
 {
 }
 

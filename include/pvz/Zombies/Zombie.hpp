@@ -4,6 +4,8 @@
 #include "pvz/GameObject/GameObject.hpp"
 #include "pvz/utils.hpp"
 
+#include "pvz/Objects/ZombieCard.hpp"
+
 class Zombie : public GameObject
 {
 public:
@@ -15,8 +17,18 @@ public:
 
   void setLocation(int col, int row);
 
+  bool isEating() const;
+  void setEating(bool eating);
+
+  void decreaseHp(int hp);
+
+  ZombieType getZombieType() const;
+
 protected:
   int m_hp = 260;
+  bool m_eating = false;
+  AnimID m_currentAnim = AnimID::WALK;
+  ZombieType m_zombieType;
 };
 
 #endif // !ZOMBIE_HPP
