@@ -194,6 +194,27 @@ LevelStatus GameWorld::Update()
   }
   m_objects.remove_if([](const std::shared_ptr<GameObject> &obj)
                       { return obj == nullptr; });
+
+  for (auto &obj : m_objects)
+  {
+    if (obj->ifZombie())
+    {
+      std::shared_ptr<Zombie> zombie = std::dynamic_pointer_cast<Zombie>(obj);
+      bool eating = false;
+      for (auto &other : m_objects)
+      {
+        if (obj != other && obj->ifCrashObject(*other))
+        {
+          if (other->ifPlant())
+          {
+            eating = true;
+          }
+        }
+      }
+      if (zombie->isEating() && !eating)
+        zombie->setEating(eating);
+    }
+  }
   return LevelStatus::ONGOING;
 }
 
