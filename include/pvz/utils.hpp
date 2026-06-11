@@ -153,12 +153,13 @@ enum class AnimID
   JUMP
 };
 
-const int MAX_LAYERS = 7;
+const int MAX_LAYERS = 8;
 
 enum class LayerID
 {
   SUN = 0,
   ZOMBIES,
+  RABBIT,
   PROJECTILES,
   PLANTS,
   COOLDOWN_MASK,

@@ -10,6 +10,7 @@ add_library(
   ZombieCard.cpp
   ZombiePlace.cpp
   CardHover.cpp
+  Sun.cpp
 )
 
 target_link_libraries(

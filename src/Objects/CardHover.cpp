@@ -11,7 +11,7 @@ void CardHover::Update()
   tickCounter++;
   if (tickCounter >= goalTick)
   {
-    ifLive = false;
+    if_live = false;
   }
 }
 void CardHover::OnClick() {}
@@ -42,5 +42,5 @@ void CardHover::setLoc(ZombieType type)
 
 bool CardHover::isLive()
 {
-  return ifLive;
+  return if_live;
 }

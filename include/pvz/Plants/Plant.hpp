@@ -16,8 +16,6 @@ public:
 
   void decreaseHp(int damage);
 
-  bool isLive();
-
   void setHp(int hp);
 
 protected:

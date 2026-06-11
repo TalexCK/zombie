@@ -17,10 +17,5 @@ void Brain::setID(int id)
 
 void Brain::die()
 {
-  live = false;
-}
-
-bool Brain::isLive()
-{
-  return live;
+  if_live = false;
 }

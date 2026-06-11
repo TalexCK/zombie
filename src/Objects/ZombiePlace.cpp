@@ -2,7 +2,7 @@
 #include "pvz/GameWorld/GameWorld.hpp"
 
 ZombiePlace::ZombiePlace()
-    : GameObject(ImageID::NONE, 0, 0, LayerID::UI,
+    : GameObject(ImageID::NONE, 0, 0, LayerID::RABBIT,
                  LAWN_GRID_WIDTH, LAWN_GRID_HEIGHT - 10, AnimID::NO_ANIMATION)
 {
 }
@@ -10,10 +10,21 @@ ZombiePlace::ZombiePlace()
 void ZombiePlace::Update() {}
 void ZombiePlace::OnClick()
 {
-  if (m_world->isZombieChoosed())
+  bool isCrash = false;
+  for (auto &obj : m_world->getObjects())
   {
-    m_world->placeZombie(m_row, m_col);
-    m_world->cancelZombieChoosed();
+    if (ifCrashObject(*obj) && obj->ifZombie())
+    {
+      isCrash = true;
+      break;
+    }
+  }
+  if (m_world->isZombieChoosed() && !isCrash)
+  {
+    if (m_world->placeZombie(m_row, m_col))
+    {
+      m_world->cancelZombieChoosed();
+    }
   }
 }
 

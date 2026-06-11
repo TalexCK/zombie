@@ -4,6 +4,7 @@ Plant::Plant(ImageID imageID, int x, int y, LayerID layer, int width, int height
     : GameObject(imageID, x, y, layer, width, height, animID)
 {
   m_hp = hp;
+  setPlant();
 }
 
 void Plant::Update() {}
@@ -19,11 +20,11 @@ void Plant::setPosition(int row, int col)
 void Plant::decreaseHp(int damage)
 {
   m_hp -= damage;
-}
-
-bool Plant::isLive()
-{
-  return m_hp > 0;
+  if (m_hp <= 0)
+  {
+    m_hp = 0;
+    if_live = false;
+  }
 }
 
 void Plant::setHp(int hp)

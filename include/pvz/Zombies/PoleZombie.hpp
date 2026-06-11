@@ -11,6 +11,15 @@ public:
 
   void Update() override;
   void OnClick() override;
+
+  bool ifRunning() const;
+
+  void shouldJump();
+  bool ifJumpping() const;
+
+private:
+  bool m_running = true;
+  int frame_count = 41;
 };
 
 #endif // !POLEZOMBIE_HPP

@@ -11,6 +11,18 @@ public:
 
   void Update() override;
   void OnClick() override;
+
+  int getStage() const;
+  void nextStage();
+
+  void setBungeeLocation(int col, int row);
+  int getFrameCount() const;
+
+private:
+  int stage = 0;
+  int goalY = 0;
+  int goalYup = 0;
+  int frame_count = 30;
 };
 
 #endif // !BUNGEEZOMBIE_HPP
