@@ -8,5 +8,9 @@ SunFlower::SunFlower()
 {
 }
 
-void SunFlower::Update() {}
+void SunFlower::Update()
+{
+  if (!isLive())
+    return;
+}
 void SunFlower::OnClick() {}

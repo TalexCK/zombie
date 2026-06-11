@@ -11,6 +11,13 @@ public:
 
   void Update() override;
   void OnClick() override;
+
+  void updateShooting(bool shooting);
+
+private:
+  int cooldown = 32;
+  bool ifShooting = false;
+  bool ifSecond = false;
 };
 
 #endif // !REPEATER_HPP

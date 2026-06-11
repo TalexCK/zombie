@@ -16,6 +16,7 @@
 #include "pvz/Zombies/BucketZombie.hpp"
 #include "pvz/Zombies/BungeeZombie.hpp"
 #include "pvz/Objects/Sun.hpp"
+#include "pvz/Projectiles/Pea.hpp"
 
 void GameWorld::Init()
 {
@@ -112,7 +113,7 @@ LevelStatus GameWorld::Update()
               }
             }
           }
-          if (std::shared_ptr<Brain> brain = std::dynamic_pointer_cast<Brain>(other))
+          else if (std::shared_ptr<Brain> brain = std::dynamic_pointer_cast<Brain>(other))
           {
             brain->die();
             zombie->decreaseHp(100000);
@@ -121,6 +122,26 @@ LevelStatus GameWorld::Update()
               m_stageEnded = true;
             }
             continue;
+          }
+          else if (std::shared_ptr<Pea> pea = std::dynamic_pointer_cast<Pea>(other))
+          {
+            pea->kill();
+            zombie->decreaseHp(24);
+            continue;
+          }
+        }
+        if (std::shared_ptr<PeaShooter> peaShooter = std::dynamic_pointer_cast<PeaShooter>(other))
+        {
+          if (peaShooter->GetX() < zombie->GetX() && peaShooter->GetY() == zombie->GetY())
+          {
+            peaShooter->updateShooting(true);
+          }
+        }
+        if (std::shared_ptr<Repeater> repeater = std::dynamic_pointer_cast<Repeater>(other))
+        {
+          if (repeater->GetX() < zombie->GetX() && repeater->GetY() == zombie->GetY())
+          {
+            repeater->updateShooting(true);
           }
         }
       }
@@ -186,6 +207,14 @@ LevelStatus GameWorld::Update()
     if (std::shared_ptr<CardHover> hover = std::dynamic_pointer_cast<CardHover>(obj))
     {
       if (!hover->isLive())
+      {
+        obj.reset();
+      }
+      continue;
+    }
+    if (std::shared_ptr<Pea> pea = std::dynamic_pointer_cast<Pea>(obj))
+    {
+      if (!pea->isLive())
       {
         obj.reset();
       }
@@ -335,6 +364,7 @@ void GameWorld::generatePlant(int cols)
         {
           std::shared_ptr<SunFlower> plant = std::make_shared<SunFlower>();
           plant->setPosition(row, col);
+          plant->setGameWorld(shared_from_this());
           m_waitingObjects.push_back(plant);
           setAsPlantAt(col, row);
         }
@@ -342,6 +372,7 @@ void GameWorld::generatePlant(int cols)
         {
           std::shared_ptr<PeaShooter> plant = std::make_shared<PeaShooter>();
           plant->setPosition(row, col);
+          plant->setGameWorld(shared_from_this());
           m_waitingObjects.push_back(plant);
           setAsPlantAt(col, row);
         }
@@ -349,6 +380,7 @@ void GameWorld::generatePlant(int cols)
         {
           std::shared_ptr<Repeater> plant = std::make_shared<Repeater>();
           plant->setPosition(row, col);
+          plant->setGameWorld(shared_from_this());
           m_waitingObjects.push_back(plant);
           setAsPlantAt(col, row);
         }
@@ -356,6 +388,7 @@ void GameWorld::generatePlant(int cols)
         {
           std::shared_ptr<WallNut> plant = std::make_shared<WallNut>();
           plant->setPosition(row, col);
+          plant->setGameWorld(shared_from_this());
           m_waitingObjects.push_back(plant);
           setAsPlantAt(col, row);
         }
@@ -457,4 +490,11 @@ bool GameWorld::placeZombie(int row, int col)
 std::list<std::shared_ptr<GameObject>> GameWorld::getObjects()
 {
   return m_objects;
+}
+
+void GameWorld::generatePea(int row, int col)
+{
+  std::shared_ptr<Pea> pea = std::make_shared<Pea>();
+  pea->setPosition(row, col);
+  m_waitingObjects.push_back(pea);
 }

@@ -31,3 +31,8 @@ void Plant::setHp(int hp)
 {
   this->m_hp = hp;
 }
+
+void Plant::setGameWorld(std::shared_ptr<GameWorld> world)
+{
+  m_world = world;
+}

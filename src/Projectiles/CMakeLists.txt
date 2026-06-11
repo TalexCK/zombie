@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(
-  GameWorld
+  Projectiles
   STATIC
-  GameWorld.cpp
+  Projectile.cpp
+  Pea.cpp
 )
 
 target_link_libraries(
-  GameWorld
-  GameObject
-  Objects
-  Plants
-  Zombies
   Projectiles
+  PUBLIC
+  GameObject
 )
