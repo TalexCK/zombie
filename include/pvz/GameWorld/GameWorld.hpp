@@ -26,6 +26,8 @@ public:
 
   void Init() override;
 
+  void initStage();
+
   LevelStatus Update() override;
 
   void CleanUp() override;

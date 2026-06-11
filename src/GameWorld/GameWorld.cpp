@@ -20,12 +20,20 @@
 
 void GameWorld::Init()
 {
+  initStage();
+}
 
-  m_zombieChoosed = false;
+void GameWorld::initStage()
+{
   m_objects.clear();
+  m_sunText.reset();
+  m_infoText.reset();
+  m_zombieChoosed = false;
   m_objects.push_back(std::make_shared<Background>());
 
   m_stageEnded = false;
+
+  m_sunCount = 0;
 
   addSun(150);
   initBrains();
@@ -42,14 +50,17 @@ void GameWorld::Init()
   m_progressBar = std::make_shared<ProgressBar>();
   m_objects.push_back(m_progressBar);
 
-  m_deploymentStartCol = ZOMBIE_DEPLOYMENT_BUFFER_COLS;
-
   m_redLine = std::make_shared<RedLine>();
   m_objects.push_back(m_redLine);
-  m_redLine->updateColLeft(m_deploymentStartCol);
 
   updateStage();
   m_progressBar->setStage(m_stage);
+  m_deploymentStartCol = ZOMBIE_DEPLOYMENT_BUFFER_COLS + m_stage;
+  m_redLine->updateColLeft(m_deploymentStartCol);
+  for (int i = 0; i < GAME_ROWS * GAME_COLS; ++i)
+  {
+    m_blocks[i] = 0;
+  }
   generatePlant(m_deploymentStartCol - 1);
 }
 
@@ -119,7 +130,18 @@ LevelStatus GameWorld::Update()
             zombie->decreaseHp(100000);
             if (decreaseBrains())
             {
-              m_stageEnded = true;
+              if (m_stage < TOTAL_ROUNDS)
+              {
+                m_stageEnded = true;
+                initStage();
+                m_stageEnded = false;
+                return LevelStatus::ONGOING;
+              }
+              else
+              {
+                m_infoText->SetText("You Win!");
+                return LevelStatus::WINNING;
+              }
             }
             continue;
           }
@@ -224,10 +246,13 @@ LevelStatus GameWorld::Update()
   m_objects.remove_if([](const std::shared_ptr<GameObject> &obj)
                       { return obj == nullptr; });
 
+  int zombieCount = 0;
+
   for (auto &obj : m_objects)
   {
     if (obj->ifZombie())
     {
+      zombieCount++;
       std::shared_ptr<Zombie> zombie = std::dynamic_pointer_cast<Zombie>(obj);
       bool eating = false;
       for (auto &other : m_objects)
@@ -243,6 +268,10 @@ LevelStatus GameWorld::Update()
       if (zombie->isEating() && !eating)
         zombie->setEating(eating);
     }
+  }
+  if (m_brains > 0 && m_sunCount < 50 && zombieCount == 0)
+  {
+    return LevelStatus::LOSING;
   }
   return LevelStatus::ONGOING;
 }
@@ -288,7 +317,6 @@ bool GameWorld::decreaseBrains()
 bool GameWorld::updateStage()
 {
   m_stage++;
-  m_deploymentStartCol++;
   m_redLine->updateColLeft(m_deploymentStartCol);
   if (m_stage > TOTAL_ROUNDS)
     return false;
@@ -360,7 +388,7 @@ void GameWorld::generatePlant(int cols)
       if (!ifPlantAt(col, row))
       {
         int plantType = randInt(0, 9);
-        if (plantType <= 3)
+        if (plantType <= 100)
         {
           std::shared_ptr<SunFlower> plant = std::make_shared<SunFlower>();
           plant->setPosition(row, col);
