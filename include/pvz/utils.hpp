@@ -178,6 +178,7 @@ const int BUNGEE_VERTICAL_SPEED = 6;
 const int BUNGEE_TOP_ROW_SCALE = 2;
 const int BUNGEE_TOP_ROW_OFFSET = 3;
 const int BUNGEE_TOP_ROW_DIVISOR = 2;
+const int ZOMBIE_HEIGHT_OFFSET = 20;
 
 enum class ImageID
 {

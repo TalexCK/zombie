@@ -37,7 +37,7 @@ void Zombie::setEating(bool eating)
 
 void Zombie::setLocation(int col, int row)
 {
-  MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH, FIRST_ROW_CENTER + row * LAWN_GRID_HEIGHT);
+  MoveTo(FIRST_COL_CENTER + col * LAWN_GRID_WIDTH, FIRST_ROW_CENTER + row * LAWN_GRID_HEIGHT + ZOMBIE_HEIGHT_OFFSET);
 }
 
 void Zombie::decreaseHp(int hp)

@@ -218,6 +218,7 @@ LevelStatus GameWorld::Update()
   }
   if (m_brains > 0 && m_sunCount < REGULAR_ZOMBIE_PRICE && zombieCount == 0 && collectiveSunCount == 0)
   {
+    m_infoText->SetText("You Lose!");
     return LevelStatus::LOSING;
   }
   return LevelStatus::ONGOING;
