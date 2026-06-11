@@ -101,21 +101,25 @@ LevelStatus GameWorld::Update()
           else if (other->ifBrain())
           {
             std::shared_ptr<Brain> brain = std::static_pointer_cast<Brain>(other);
-            brain->die();
-            zombie->decreaseHp(100000);
-            if (decreaseBrains())
+            if (brain->isActive())
             {
-              if (m_stage < TOTAL_ROUNDS)
+              brain->die();
+              brain->deactive();
+              zombie->decreaseHp(100000);
+              if (decreaseBrains())
               {
-                m_stageEnded = true;
-                initStage();
-                m_stageEnded = false;
-                return LevelStatus::ONGOING;
-              }
-              else
-              {
-                m_infoText->SetText("You Win!");
-                return LevelStatus::WINNING;
+                if (m_stage < TOTAL_ROUNDS)
+                {
+                  m_stageEnded = true;
+                  initStage();
+                  m_stageEnded = false;
+                  return LevelStatus::ONGOING;
+                }
+                else
+                {
+                  m_infoText->SetText("You Win!");
+                  return LevelStatus::WINNING;
+                }
               }
             }
             continue;

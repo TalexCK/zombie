@@ -20,3 +20,13 @@ void Brain::die()
 {
   if_live = false;
 }
+
+void Brain::deactive()
+{
+  active = false;
+}
+
+bool Brain::isActive() const
+{
+  return active;
+}

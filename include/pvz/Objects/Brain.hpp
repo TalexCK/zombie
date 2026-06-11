@@ -14,9 +14,12 @@ public:
 
   void setID(int id);
   void die();
+  bool isActive() const;
+  void deactive();
 
 private:
   int m_id = 0;
+  bool active = true;
 };
 
 #endif // !BRAIN_HPP
