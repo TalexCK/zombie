@@ -104,7 +104,7 @@ LevelStatus GameWorld::Update()
             else if (zombie->getZombieType() == ZombieType::BUNGEE)
             {
               std::shared_ptr<BungeeZombie> bungeeZombie = std::dynamic_pointer_cast<BungeeZombie>(obj);
-              if (bungeeZombie->getStage() == 1 && bungeeZombie->getFrameCount() == 0)
+              if (bungeeZombie->getStage() == 2 && bungeeZombie->getFrameCount() == 0)
               {
                 std::shared_ptr<Plant> plant = std::dynamic_pointer_cast<Plant>(other);
                 plant->decreaseHp(100000);

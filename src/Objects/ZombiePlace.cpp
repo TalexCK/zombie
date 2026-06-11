@@ -2,7 +2,7 @@
 #include "pvz/GameWorld/GameWorld.hpp"
 
 ZombiePlace::ZombiePlace()
-    : GameObject(ImageID::NONE, 0, 0, LayerID::UI,
+    : GameObject(ImageID::NONE, 0, 0, LayerID::RABBIT,
                  LAWN_GRID_WIDTH, LAWN_GRID_HEIGHT - 10, AnimID::NO_ANIMATION)
 {
 }

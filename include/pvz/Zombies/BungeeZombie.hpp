@@ -22,7 +22,7 @@ private:
   int stage = 0;
   int goalY = 0;
   int goalYup = 0;
-  int frame_count = 90;
+  int frame_count = 30;
 };
 
 #endif // !BUNGEEZOMBIE_HPP
