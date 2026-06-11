@@ -18,10 +18,13 @@ public:
 
   void setHp(int hp);
 
+  void setGameWorld(std::shared_ptr<GameWorld> world);
+
 protected:
   int m_row = 0;
   int m_col = 0;
   int m_hp = 100;
+  std::shared_ptr<GameWorld> m_world;
 };
 
 #endif // !PLANT_HPP

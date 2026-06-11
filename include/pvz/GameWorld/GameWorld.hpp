@@ -64,6 +64,8 @@ public:
 
   std::list<std::shared_ptr<GameObject>> getObjects();
 
+  void generatePea(int row, int col);
+
 private:
   std::list<std::shared_ptr<GameObject>> m_objects;
   std::list<std::shared_ptr<GameObject>> m_waitingObjects;

@@ -11,6 +11,12 @@ public:
 
   void Update() override;
   void OnClick() override;
+
+  void updateShooting(bool shooting);
+
+private:
+  int cooldown = 32;
+  bool ifShooting = false;
 };
 
 #endif // !PEASHOOTER_HPP

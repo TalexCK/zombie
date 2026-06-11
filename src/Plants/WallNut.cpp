@@ -8,5 +8,13 @@ WallNut::WallNut()
 {
 }
 
-void WallNut::Update() {}
+void WallNut::Update()
+{
+  if (!isLive())
+    return;
+  if (m_hp <= 1800)
+  {
+    ChangeImage(ImageID::WALLNUT_CRACKED);
+  }
+}
 void WallNut::OnClick() {}
