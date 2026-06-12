@@ -2,9 +2,10 @@
 #include "pvz/Plants/Plant.hpp"
 
 PoleZombie::PoleZombie()
-    : Zombie(ImageID::POLE_VAULTING_ZOMBIE, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::ZOMBIES,
+    : Zombie(ImageID::POLE_VAULTING_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
              ZOMBIE_WIDTH, ZOMBIE_HEIGHT, AnimID::RUN, POLE_ZOMBIE_HP)
 {
+  setZombieType(ZombieType::POLE);
 }
 
 void PoleZombie::Update()

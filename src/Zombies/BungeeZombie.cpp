@@ -2,9 +2,10 @@
 #include "pvz/Plants/Plant.hpp"
 
 BungeeZombie::BungeeZombie()
-    : Zombie(ImageID::BUNGEE_ZOMBIE, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::ZOMBIES,
+    : Zombie(ImageID::BUNGEE_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
              ZOMBIE_WIDTH, ZOMBIE_HEIGHT, AnimID::NO_ANIMATION, BUNGEE_ZOMBIE_HP)
 {
+  setZombieType(ZombieType::BUNGEE);
 }
 
 void BungeeZombie::Update()

@@ -1,9 +1,10 @@
 #include "pvz/Zombies/ConeheadZombie.hpp"
 
 ConeheadZombie::ConeheadZombie()
-    : Zombie(ImageID::CONEHEAD_ZOMBIE, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::ZOMBIES,
+    : Zombie(ImageID::CONEHEAD_ZOMBIE, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::ZOMBIES,
              ZOMBIE_WIDTH, ZOMBIE_HEIGHT, AnimID::WALK, CONEHEAD_ZOMBIE_HP)
 {
+  setZombieType(ZombieType::CONEHEAD);
 }
 
 void ConeheadZombie::Update()

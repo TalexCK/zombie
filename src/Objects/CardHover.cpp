@@ -1,7 +1,7 @@
 #include "pvz/Objects/CardHover.hpp"
 
 CardHover::CardHover()
-    : GameObject(ImageID::COOLDOWN_MASK, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::COOLDOWN_MASK,
+    : GameObject(ImageID::COOLDOWN_MASK, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::COOLDOWN_MASK,
                  SEED_WIDTH, SEED_HEIGHT, AnimID::NO_ANIMATION)
 {
 }

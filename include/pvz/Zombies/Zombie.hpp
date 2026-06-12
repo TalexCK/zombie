@@ -26,12 +26,17 @@ public:
   virtual bool attackPlant(Plant &plant);
   virtual void afterCollisionCheck();
 
+  void setZombieType(ZombieType zombieType);
+
+  ZombieType getZombieType();
+
 protected:
   void moveZombie();
 
   int m_hp = REGULAR_ZOMBIE_HP;
   bool m_eating = false;
   AnimID m_currentAnim = AnimID::WALK;
+  ZombieType m_zombieType;
 };
 
 #endif // !ZOMBIE_HPP
