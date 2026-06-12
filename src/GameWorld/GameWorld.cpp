@@ -141,7 +141,16 @@ LevelStatus GameWorld::Update()
           std::shared_ptr<Plant> plant = std::static_pointer_cast<Plant>(other);
           if (plant->canShoot() && plant->GetX() < zombie->GetX() && plant->GetY() + ZOMBIE_HEIGHT_OFFSET == zombie->GetY())
           {
-            plant->updateShooting(true);
+            if (zombie->getZombieType() != ZombieType::POLE)
+            {
+              plant->updateShooting(true);
+            }
+            else
+            {
+              std::shared_ptr<PoleZombie> poleZombie = std::static_pointer_cast<PoleZombie>(zombie);
+              if (!poleZombie->ifJumpping())
+                plant->updateShooting(true);
+            }
           }
         }
       }

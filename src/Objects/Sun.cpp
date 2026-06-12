@@ -3,7 +3,7 @@
 #include "pvz/utils.hpp"
 
 Sun::Sun()
-    : GameObject(ImageID::SUN, WINDOW_WIDTH / WINDOW_CENTER_DIVISOR, WINDOW_HEIGHT / WINDOW_CENTER_DIVISOR, LayerID::SUN,
+    : GameObject(ImageID::SUN, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, LayerID::SUN,
                  SUN_SIZE, SUN_SIZE, AnimID::IDLE)
 {
   setSun();

@@ -25,13 +25,14 @@ bool GameObject::ifCrash(int x1, int y1, int x2, int y2, int width1, int height1
     height2 = height1;
     height1 = height3;
   }
-  return (x2 + width2 / HITBOX_HALF_DIVISOR - (x1 - width1 / HITBOX_HALF_DIVISOR) < width1 + width2) &&
-         (y2 + height2 / HITBOX_HALF_DIVISOR - (y1 - height1 / HITBOX_HALF_DIVISOR) < height1 + height2);
+  return (x2 + width2 / 2 - (x1 - width1 / 2) < width1 + width2) &&
+         (y2 + height2 / 2 - (y1 - height1 / 2) < height1 + height2);
 }
 
 bool GameObject::ifCrashObject(const GameObject &other) const
 {
-  return ifCrash(GetX(), GetY(), other.GetX(), other.GetY(), GetWidth(), GetHeight(), other.GetWidth(), other.GetHeight());
+  return ifCrash(GetX(), GetY(), other.GetX(), other.GetY(),
+                 GetWidth(), GetHeight(), other.GetWidth(), other.GetHeight());
 }
 
 bool GameObject::ifZombie() const

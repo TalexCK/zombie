@@ -65,3 +65,13 @@ void Zombie::moveZombie()
   if (!m_eating)
     MoveTo(GetX() - ZOMBIE_WALK_SPEED, GetY());
 }
+
+void Zombie::setZombieType(ZombieType zombieType)
+{
+  m_zombieType = zombieType;
+}
+
+ZombieType Zombie::getZombieType()
+{
+  return m_zombieType;
+}
