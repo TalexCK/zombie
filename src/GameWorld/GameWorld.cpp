@@ -117,7 +117,7 @@ LevelStatus GameWorld::Update()
                 }
                 else
                 {
-                  m_infoText->SetText("You Win!");
+                  m_infoText.reset();
                   return LevelStatus::WINNING;
                 }
               }
@@ -139,7 +139,7 @@ LevelStatus GameWorld::Update()
         if (other->ifPlant())
         {
           std::shared_ptr<Plant> plant = std::static_pointer_cast<Plant>(other);
-          if (plant->canShoot() && plant->GetX() < zombie->GetX() && plant->GetY() == zombie->GetY())
+          if (plant->canShoot() && plant->GetX() < zombie->GetX() && plant->GetY() + ZOMBIE_HEIGHT_OFFSET == zombie->GetY())
           {
             plant->updateShooting(true);
           }
@@ -218,7 +218,7 @@ LevelStatus GameWorld::Update()
   }
   if (m_brains > 0 && m_sunCount < REGULAR_ZOMBIE_PRICE && zombieCount == 0 && collectiveSunCount == 0)
   {
-    m_infoText->SetText("You Lose!");
+    m_infoText.reset();
     return LevelStatus::LOSING;
   }
   return LevelStatus::ONGOING;
