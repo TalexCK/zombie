@@ -25,10 +25,11 @@ public:
   void decreaseHp(int hp);
   virtual bool attackPlant(Plant &plant);
   virtual void afterCollisionCheck();
+  virtual bool canBeTargetedByShooter() const;
 
   void setZombieType(ZombieType zombieType);
 
-  ZombieType getZombieType();
+  ZombieType getZombieType() const;
 
 protected:
   void moveZombie();

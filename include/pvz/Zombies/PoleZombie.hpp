@@ -17,6 +17,7 @@ public:
   bool ifJumpping() const;
   bool attackPlant(Plant &plant) override;
   void afterCollisionCheck() override;
+  bool canBeTargetedByShooter() const override;
 
 private:
   bool m_running = true;
