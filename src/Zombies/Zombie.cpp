@@ -64,6 +64,9 @@ void Zombie::moveZombie()
 {
   if (!m_eating)
     MoveTo(GetX() - ZOMBIE_WALK_SPEED, GetY());
+  const int zombieHalfWidth = GetWidth() / 2;
+  if (GetX() + zombieHalfWidth < 0)
+    if_live = false;
 }
 
 void Zombie::setZombieType(ZombieType zombieType)
@@ -71,7 +74,12 @@ void Zombie::setZombieType(ZombieType zombieType)
   m_zombieType = zombieType;
 }
 
-ZombieType Zombie::getZombieType()
+bool Zombie::canBeTargetedByShooter() const
+{
+  return true;
+}
+
+ZombieType Zombie::getZombieType() const
 {
   return m_zombieType;
 }

@@ -20,6 +20,8 @@ void PoleZombie::Update()
   {
     PlayAnimation(AnimID::WALK);
     MoveTo(GetX() - POLE_JUMP_FORWARD_DISTANCE, GetY());
+    if (GetX() < ZOMBIE_LEFT_BOUNDARY_X)
+      MoveTo(ZOMBIE_LEFT_BOUNDARY_X, GetY());
     frame_count = -1;
   }
   else
@@ -37,10 +39,11 @@ void PoleZombie::Update()
       MoveTo(GetX() - POLE_JUMP_COLLISION_OFFSET, GetY());
     }
   }
-  if (GetX() < ZOMBIE_LEFT_BOUNDARY_X)
+  const int realX = ifRunning() ? GetX() + POLE_JUMP_COLLISION_OFFSET : GetX();
+  const int zombieHalfWidth = GetWidth() / 2;
+  if (realX + zombieHalfWidth < 0)
   {
-    ChangeImage(ImageID::NONE);
-    MoveTo(ZOMBIE_LEFT_BOUNDARY_X, GetY());
+    if_live = false;
   }
 }
 
@@ -82,4 +85,9 @@ void PoleZombie::afterCollisionCheck()
   {
     MoveTo(GetX() + POLE_JUMP_COLLISION_OFFSET, GetY());
   }
+}
+
+bool PoleZombie::canBeTargetedByShooter() const
+{
+  return !ifJumpping();
 }

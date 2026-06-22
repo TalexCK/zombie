@@ -27,6 +27,7 @@ void GameWorld::Init()
 void GameWorld::initStage()
 {
   m_objects.clear();
+  m_waitingObjects.clear();
   m_sunText.reset();
   m_infoText.reset();
   m_zombieChoosed = false;
@@ -141,16 +142,8 @@ LevelStatus GameWorld::Update()
           std::shared_ptr<Plant> plant = std::static_pointer_cast<Plant>(other);
           if (plant->canShoot() && plant->GetX() < zombie->GetX() && plant->GetY() + ZOMBIE_HEIGHT_OFFSET == zombie->GetY())
           {
-            if (zombie->getZombieType() != ZombieType::POLE)
-            {
+            if (zombie->canBeTargetedByShooter())
               plant->updateShooting(true);
-            }
-            else
-            {
-              std::shared_ptr<PoleZombie> poleZombie = std::static_pointer_cast<PoleZombie>(zombie);
-              if (!poleZombie->ifJumpping())
-                plant->updateShooting(true);
-            }
           }
         }
       }
@@ -225,9 +218,14 @@ LevelStatus GameWorld::Update()
       collectiveSunCount++;
     }
   }
+  for (auto &obj : m_waitingObjects)
+  {
+    if (obj->ifSun())
+      collectiveSunCount++;
+  }
   if (m_brains > 0 && m_sunCount < REGULAR_ZOMBIE_PRICE && zombieCount == 0 && collectiveSunCount == 0)
   {
-    m_infoText.reset();
+    m_infoText->SetText("You Lose!");
     return LevelStatus::LOSING;
   }
   return LevelStatus::ONGOING;
@@ -236,6 +234,7 @@ LevelStatus GameWorld::Update()
 void GameWorld::CleanUp()
 {
   m_objects.clear();
+  m_waitingObjects.clear();
   m_sunText.reset();
   m_infoText.reset();
   m_progressBar.reset();
